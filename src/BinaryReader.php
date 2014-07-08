@@ -45,7 +45,7 @@ class BinaryReader
     private $bitMasks = [];
 
     /**
-     * @var int
+     * @var string
      */
     private $endian;
 
