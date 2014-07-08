@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<phpunit bootstrap="../vendor/autoload.php" colors="true">
+    <filter>
+        <blacklist>
+            <directory suffix=".php">.</directory>
+        </blacklist>
+        <whitelist>
+            <directory suffix=".php">../src</directory>
+        </whitelist>
+    </filter>
+    <testsuites>
+        <testsuite name="PhpBinaryReader">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+</phpunit>

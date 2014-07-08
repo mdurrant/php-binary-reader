@@ -1,0 +1,18 @@
+imports:
+    - php
+
+filter:
+    paths: [src/*]
+
+build_failure_conditions:
+    - 'issues.label("coding-style").exists'
+    - 'project.metric("scrutinizer.test_coverage", < 1)'
+
+tools:
+    external_code_coverage:
+        enabled: true
+        timeout: 1800
+    php_cs_fixer:
+        enabled: true
+        config:
+            level: psr2
