@@ -15,8 +15,8 @@ Contributions must follow the PSR2 coding standards.
 Example Usage
 ---
 ```
-$fileData = file_get_contents('somefile.bin', 'big');
-$br = new BinaryReader($fileData);
+$fileData = file_get_contents('somefile.bin');
+$br = new BinaryReader($fileData, 'little');
 $magic = $br->readUInt32();
 $offset = $br->readUInt16();
 $length = $br->readUInt16();
