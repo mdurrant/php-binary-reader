@@ -161,18 +161,18 @@ class BinaryReader
                 $bits -= $bitsLeft;
                 $result = ($this->currentByte >> $this->currentBit) << $bits;
             } elseif ($bitsLeft > $bits) {
+                $result = ($this->currentByte >> $this->currentBit) & $this->loMasks[$bits];
                 $this->currentBit += $bits;
-
-                return ($this->currentByte >> $this->currentBit) & $this->loMasks[$bits];
+                return $result;
             } else {
+                $result = $this->currentByte >> $this->currentBit;
                 $this->currentBit = 0;
-
-                return $this->currentByte >> $this->currentBit;
+                return $result;
             }
         }
 
         if ($bits >= 8) {
-            $bytes = (int) $bits / 8;
+            $bytes = $bits / 8;
 
             if ($bytes == 1) {
                 $bits -= 8;
@@ -186,7 +186,7 @@ class BinaryReader
             } else {
                 while ($bits > 8) {
                     $bits -= 8;
-                    $result |= $this->readUInt8() << 8;
+                    $result |= $this->readUInt8() << $bits;
                 }
             }
         }
