@@ -99,7 +99,7 @@ class BinaryReader
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getEndian()
     {
