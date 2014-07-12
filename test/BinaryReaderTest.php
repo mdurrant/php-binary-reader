@@ -144,13 +144,13 @@ class BinaryReaderTest extends \PHPUnit_Framework_TestCase
         $this->brBig->align(true);
         $this->brBig->readBits(1);
         $this->brBig->align(true);
-        $this->assertEquals(4, $this->brBig->getPosition());
+        $this->assertEquals(2, $this->brBig->getPosition());
 
         $this->brLittle->readBits(1);
         $this->brLittle->align(true);
         $this->brLittle->readBits(1);
         $this->brLittle->align(true);
-        $this->assertEquals(4, $this->brLittle->getPosition());
+        $this->assertEquals(2, $this->brLittle->getPosition());
 
         $this->assertEquals(2, $this->brBig->readBits(16));
         $this->assertEquals(2, $this->brLittle->readBits(16));
