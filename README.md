@@ -32,8 +32,6 @@ Methods
 
 **readUInt32()** will return a 32-bit unsigned integer
 
-**readBytes($count)** will return up to 4 bytes (readBits constraint), this will be refactored later to support more
-
 **readBits($count)** will return up to 32 bits, allows reading data at the bit level
 
 **align($move)** will align the pointer back to 0 bits, it will move it to the next byte if $move = true

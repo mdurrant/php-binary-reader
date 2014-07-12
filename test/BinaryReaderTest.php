@@ -136,19 +136,6 @@ class BinaryReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers ::readBytes
-     */
-    public function testByteReader()
-    {
-        $this->assertEquals(3, $this->brBig->readBytes(4));
-        $this->assertEquals(3, $this->brLittle->readBytes(4));
-        $this->assertEquals(2, $this->brBig->readBytes(2));
-        $this->assertEquals(2, $this->brLittle->readBytes(2));
-        $this->assertEquals(103, $this->brBig->readBytes(1));
-        $this->assertEquals(103, $this->brLittle->readBytes(1));
-    }
-
-    /**
      * @covers ::align, ::getPosition
      */
     public function testAlign()
