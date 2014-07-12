@@ -108,7 +108,7 @@ class BinaryReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $this->brBig->readBits(4));
         $this->assertEquals(0, $this->brLittle->readBits(4));
         $this->assertEquals(0, $this->brBig->readBits(2));
-        $this->assertEquals(2, $this->brLittle->readBits(2));
+        $this->assertEquals(0, $this->brLittle->readBits(2));
     }
 
     public function test32BitWithNonZeroCurrentBit()
