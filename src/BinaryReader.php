@@ -17,7 +17,7 @@ class BinaryReader
     /**
      * @var mixed
      */
-    private $currentByte;
+    private $nextByte;
 
     /**
      * @var int
@@ -63,7 +63,7 @@ class BinaryReader
 
         $this->str = $str;
         $this->eofPosition = strlen($str);
-        $this->currentByte = 0;
+        $this->nextByte = false;
         $this->position = 0;
         $this->currentBit = 0;
 
@@ -99,7 +99,7 @@ class BinaryReader
     }
 
     /**
-     * @return int
+     * @return string
      */
     public function getEndian()
     {
@@ -127,17 +127,12 @@ class BinaryReader
     }
 
     /**
-     * @param  boolean $move
      * @return void
      */
-    public function align($move = true)
+    public function align()
     {
-        if ($this->currentBit > 0 && $move) {
-            $this->position++;
-        }
-
         $this->currentBit = 0;
-        $this->currentByte = false;
+        $this->nextByte = false;
     }
 
     /**
@@ -153,26 +148,25 @@ class BinaryReader
 
         $result = 0;
         $bits = $count;
+        $shift = $this->currentBit;
 
-        if ($this->currentBit != 0) {
-            $bitsLeft = 8 - $this->currentBit;
+        if ($shift != 0) {
+            $bitsLeft = 8 - $shift;
 
             if ($bitsLeft < $bits) {
                 $bits -= $bitsLeft;
-                $result = ($this->currentByte >> $this->currentBit) << $bits;
+                $result = ($this->nextByte >> $shift) << $bits;
             } elseif ($bitsLeft > $bits) {
-                $result = ($this->currentByte >> $this->currentBit) & $this->loMasks[$bits];
                 $this->currentBit += $bits;
-                return $result;
+                return ($this->nextByte >> $shift) & $this->loMasks[$bits];
             } else {
-                $result = $this->currentByte >> $this->currentBit;
                 $this->currentBit = 0;
-                return $result;
+                return $this->nextByte >> $shift;
             }
         }
 
         if ($bits >= 8) {
-            $bytes = $bits / 8;
+            $bytes = intval($bits / 8);
 
             if ($bytes == 1) {
                 $bits -= 8;
@@ -186,14 +180,16 @@ class BinaryReader
             } else {
                 while ($bits > 8) {
                     $bits -= 8;
-                    $result |= $this->readUInt8() << $bits;
+                    $result |= $this->readUInt8() << 8;
                 }
             }
         }
 
         if ($bits != 0) {
-            $this->currentByte = $this->readUInt8();
-            $result |= $this->currentByte & $this->loMasks[$bits];
+            $data = unpack("C", substr($this->str, $this->position, 1));
+            $this->nextByte = $data[1];
+            $this->position++;
+            $result |= $this->nextByte & $this->loMasks[$bits];
         }
 
         $this->currentBit = $bits;
@@ -218,22 +214,13 @@ class BinaryReader
         if ($this->currentBit != 0) {
             $loMask = $this->bitMasks[$this->currentBit][0];
             $hiMask = $this->bitMasks[$this->currentBit][1];
-            $hiBits = $this->currentByte & $hiMask;
+            $hiBits = $this->nextByte & $hiMask;
             $loBits = $data & $loMask;
-            $this->currentByte = $data;
+            $this->nextByte = $data;
             $data = $hiBits | $loBits;
         }
 
         return $data;
-    }
-
-    /**
-     * @param  int   $count
-     * @return mixed
-     */
-    public function readBytes($count)
-    {
-        return $this->readBits(8 * $count);
     }
 
     /**
@@ -254,10 +241,10 @@ class BinaryReader
         if ($this->currentBit != 0) {
             $loMask = $this->bitMasks[$this->currentBit][0];
             $hiMask = $this->bitMasks[$this->currentBit][1];
-            $hiBits = ($this->currentByte & $hiMask) << 8;
+            $hiBits = ($this->nextByte & $hiMask) << 8;
             $miBits = ($data & 0xFF00) >> (8 - $this->currentBit);
             $loBits = ($data & $loMask);
-            $this->currentByte = $data & 0xFF;
+            $this->nextByte = $data & 0xFF;
             $data = $hiBits | $miBits | $loBits;
         }
 
@@ -282,10 +269,10 @@ class BinaryReader
         if ($this->currentBit != 0) {
             $loMask = $this->bitMasks[$this->currentBit][0];
             $hiMask = $this->bitMasks[$this->currentBit][1];
-            $hiBits = ($this->currentByte & $hiMask) << 24;
+            $hiBits = ($this->nextByte & $hiMask) << 24;
             $miBits = ($data & 0xFFFFFF00) >> (8 - $this->currentBit);
             $loBits = ($data & $loMask);
-            $this->currentByte = $data & 0xFF;
+            $this->nextByte = $data & 0xFF;
             $data = $hiBits | $miBits | $loBits;
         }
 
