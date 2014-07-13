@@ -108,7 +108,7 @@ class BinaryReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(0, $this->brBig->readBits(4));
         $this->assertEquals(0, $this->brLittle->readBits(4));
         $this->assertEquals(0, $this->brBig->readBits(2));
-        $this->assertEquals(0, $this->brLittle->readBits(2));
+        $this->assertEquals(2, $this->brLittle->readBits(2));
     }
 
     public function test32BitWithNonZeroCurrentBit()
@@ -136,6 +136,19 @@ class BinaryReaderTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * @covers ::readBytes
+     */
+    public function testByteReader()
+    {
+        $this->assertEquals(3, $this->brBig->readBytes(4));
+        $this->assertEquals(3, $this->brLittle->readBytes(4));
+        $this->assertEquals(2, $this->brBig->readBytes(2));
+        $this->assertEquals(2, $this->brLittle->readBytes(2));
+        $this->assertEquals(103, $this->brBig->readBytes(1));
+        $this->assertEquals(103, $this->brLittle->readBytes(1));
+    }
+
+    /**
      * @covers ::align, ::getPosition
      */
     public function testAlign()
@@ -144,16 +157,16 @@ class BinaryReaderTest extends \PHPUnit_Framework_TestCase
         $this->brBig->align(true);
         $this->brBig->readBits(1);
         $this->brBig->align(true);
-        $this->assertEquals(2, $this->brBig->getPosition());
+        $this->assertEquals(4, $this->brBig->getPosition());
 
         $this->brLittle->readBits(1);
         $this->brLittle->align(true);
         $this->brLittle->readBits(1);
         $this->brLittle->align(true);
-        $this->assertEquals(2, $this->brLittle->getPosition());
+        $this->assertEquals(4, $this->brLittle->getPosition());
 
-        $this->assertEquals(3, $this->brBig->readBits(16));
-        $this->assertEquals(0, $this->brLittle->readBits(16));
+        $this->assertEquals(2, $this->brBig->readBits(16));
+        $this->assertEquals(2, $this->brLittle->readBits(16));
     }
 
     /**
