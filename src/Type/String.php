@@ -8,8 +8,8 @@ use PhpBinaryReader\Exception\InvalidDataException;
 class String implements TypeInterface
 {
     /**
-     * @param \PhpBinaryReader\BinaryReader $br
-     * @param int $length
+     * @param  \PhpBinaryReader\BinaryReader $br
+     * @param  int                           $length
      * @return string
      * @throws \OutOfBoundsException
      * @throws InvalidDataException
@@ -31,13 +31,14 @@ class String implements TypeInterface
     }
 
     /**
-     * @param \PhpBinaryReader\BinaryReader $br
-     * @param int $length
+     * @param  \PhpBinaryReader\BinaryReader $br
+     * @param  int                           $length
      * @return string
      */
     public static function readAligned(BinaryReader &$br, $length)
     {
         $br->align();
+
         return self::read($br, $length);
     }
 }

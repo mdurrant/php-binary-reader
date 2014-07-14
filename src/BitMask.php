@@ -33,8 +33,8 @@ class BitMask
     }
 
     /**
-     * @param int $bit
-     * @param int $type
+     * @param  int                            $bit
+     * @param  int                            $type
      * @return mixed
      * @throws Exception\InvalidDataException
      */

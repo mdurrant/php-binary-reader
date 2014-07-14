@@ -4,6 +4,7 @@ namespace PhpBinaryReader\Type;
 
 use PhpBinaryReader\BinaryReader;
 use PhpBinaryReader\BitMask;
+use PhpBinaryReader\Exception\InvalidDataException;
 
 class Bit implements TypeInterface
 {
@@ -15,8 +16,8 @@ class Bit implements TypeInterface
     /**
      * Returns an unsigned integer from the bit level
      *
-     * @param \PhpBinaryReader\BinaryReader $br
-     * @param int $length
+     * @param  \PhpBinaryReader\BinaryReader $br
+     * @param  int                           $length
      * @throws \OutOfBoundsException
      * @throws InvalidDataException
      * @return int
@@ -43,9 +44,11 @@ class Bit implements TypeInterface
                 $result = ($br->getNextByte() >> $shift) << $bits;
             } elseif ($bitsLeft > $bits) {
                 $br->setCurrentBit($br->getCurrentBit() + $bits);
+
                 return ($br->getNextByte() >> $shift) & BitMask::getMask($bits, BitMask::MASK_LO);
             } else {
                 $br->setCurrentBit(0);
+
                 return $br->getNextByte() >> $shift;
             }
         }
@@ -86,13 +89,16 @@ class Bit implements TypeInterface
     /**
      * Returns a signed integer from the bit level
      *
-     * @param \PhpBinaryReader\BinaryReader $br
-     * @param int $length
+     * @param  \PhpBinaryReader\BinaryReader $br
+     * @param  int                           $length
      * @return int
      */
     public static function readSigned(&$br, $length)
     {
         self::$signed = true;
-        return self::read($br, $length);
+        $value = self::read($br, $length);
+        self::$signed = false;
+
+        return $value;
     }
 }

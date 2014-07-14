@@ -10,7 +10,7 @@ class Endian
     /**
      * Converts the endianess of a number from big to little or vise-versa
      *
-     * @param int $value
+     * @param  int $value
      * @return int
      */
     public static function convert($value)

@@ -47,8 +47,8 @@ class BinaryReader
     private $endian;
 
     /**
-     * @param string $str
-     * @param int|string $endian
+     * @param  string                    $str
+     * @param  int|string                $endian
      * @throws \InvalidArgumentException
      */
     public function __construct($str, $endian = Endian::ENDIAN_LITTLE)
@@ -84,7 +84,7 @@ class BinaryReader
     }
 
     /**
-     * @param int $count
+     * @param  int $count
      * @return int
      */
     public function readBits($count)
@@ -93,7 +93,7 @@ class BinaryReader
     }
 
     /**
-     * @param int $count
+     * @param  int $count
      * @return int
      */
     public function readUBits($count)
@@ -150,7 +150,7 @@ class BinaryReader
     }
 
     /**
-     * @param int $length
+     * @param  int    $length
      * @return string
      */
     public function readString($length)
@@ -159,7 +159,7 @@ class BinaryReader
     }
 
     /**
-     * @param int $length
+     * @param  int    $length
      * @return string
      */
     public function readAlignedString($length)
@@ -168,12 +168,13 @@ class BinaryReader
     }
 
     /**
-     * @param int $machineByteOrder
+     * @param  int   $machineByteOrder
      * @return $this
      */
     public function setMachineByteOrder($machineByteOrder)
     {
         $this->machineByteOrder = $machineByteOrder;
+
         return $this;
     }
 
@@ -186,12 +187,13 @@ class BinaryReader
     }
 
     /**
-     * @param string $inputString
+     * @param  string $inputString
      * @return $this
      */
     public function setInputString($inputString)
     {
         $this->inputString = $inputString;
+
         return $this;
     }
 
@@ -204,12 +206,13 @@ class BinaryReader
     }
 
     /**
-     * @param mixed $nextByte
+     * @param  mixed $nextByte
      * @return $this
      */
     public function setNextByte($nextByte)
     {
         $this->nextByte = $nextByte;
+
         return $this;
     }
 
@@ -222,12 +225,13 @@ class BinaryReader
     }
 
     /**
-     * @param int $position
+     * @param  int   $position
      * @return $this
      */
     public function setPosition($position)
     {
         $this->position = $position;
+
         return $this;
     }
 
@@ -248,7 +252,7 @@ class BinaryReader
     }
 
     /**
-     * @param string $endian
+     * @param  string               $endian
      * @return $this
      * @throws InvalidDataException
      */
@@ -274,12 +278,13 @@ class BinaryReader
     }
 
     /**
-     * @param int $currentBit
+     * @param  int   $currentBit
      * @return $this
      */
     public function setCurrentBit($currentBit)
     {
         $this->currentBit = $currentBit;
+
         return $this;
     }
 

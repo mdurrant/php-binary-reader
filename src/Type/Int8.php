@@ -11,18 +11,13 @@ class Int8 implements TypeInterface
     /**
      * @var string
      */
-    private static $endianBig = 'C';
-
-    /**
-     * @var string
-     */
-    private static $endianLittle = 'C';
+    private static $endian = 'C';
 
     /**
      * Returns an Unsigned 8-bit Integer (aka a single byte)
      *
-     * @param \PhpBinaryReader\BinaryReader $br
-     * @param null $length
+     * @param  \PhpBinaryReader\BinaryReader $br
+     * @param  null                          $length
      * @return int
      * @throws \OutOfBoundsException
      */
@@ -32,10 +27,9 @@ class Int8 implements TypeInterface
             throw new \OutOfBoundsException('Cannot read 32-bit int, it exceeds the boundary of the file');
         }
 
-        $endian = $br->getEndian() == Endian::ENDIAN_BIG ? self::$endianBig : self::$endianLittle;
         $segment = substr($br->getInputString(), $br->getPosition(), 1);
 
-        $data = unpack($endian, $segment);
+        $data = unpack(self::$endian, $segment);
         $data = $data[1];
 
         $br->setPosition($br->getPosition() + 1);
@@ -50,20 +44,21 @@ class Int8 implements TypeInterface
     /**
      * Returns a Signed 8-bit Integer (aka a single byte)
      *
-     * @param \PhpBinaryReader\BinaryReader $br
+     * @param  \PhpBinaryReader\BinaryReader $br
      * @return int
      */
     public static function readSigned(&$br)
     {
-        self::$endianBig = 'c';
-        self::$endianLittle = 'c';
+        self::$endian = 'c';
+        $value = self::read($br);
+        self::$endian = 'C';
 
-        return self::read($br);
+        return $value;
     }
 
     /**
-     * @param \PhpBinaryReader\BinaryReader $br
-     * @param int $data
+     * @param  \PhpBinaryReader\BinaryReader $br
+     * @param  int                           $data
      * @return int
      */
     private static function bitReader(&$br, $data)

@@ -21,8 +21,8 @@ class Int32 implements TypeInterface
     /**
      * Returns an Unsigned 32-bit Integer
      *
-     * @param \PhpBinaryReader\BinaryReader $br
-     * @param null $length
+     * @param  \PhpBinaryReader\BinaryReader $br
+     * @param  null                          $length
      * @return int
      * @throws \OutOfBoundsException
      */
@@ -50,28 +50,29 @@ class Int32 implements TypeInterface
     /**
      * Returns a Signed 32-Bit Integer
      *
-     * @param \PhpBinaryReader\BinaryReader $br
+     * @param  \PhpBinaryReader\BinaryReader $br
      * @return int
      */
     public static function readSigned(&$br)
     {
-        self::$endianBig = 'i';
-        self::$endianLittle = 'i';
+        self::$endianBig = 'l';
+        self::$endianLittle = 'l';
 
         $value = self::read($br);
 
-        if ($br->getEndian() == Endian::ENDIAN_LITTLE && $br->getMachineByteOrder() == Endian::ENDIAN_LITTLE) {
-            return $value;
-        } elseif ($br->getEndian() == Endian::ENDIAN_BIG && $br->getMachineByteOrder() == Endian::ENDIAN_BIG) {
-            return $value;
-        } else {
+        self::$endianBig = 'N';
+        self::$endianLittle = 'V';
+
+        if ($br->getMachineByteOrder() != Endian::ENDIAN_LITTLE && $br->getEndian() == Endian::ENDIAN_LITTLE) {
             return Endian::convert($value);
+        } else {
+            return $value;
         }
     }
 
     /**
-     * @param \PhpBinaryReader\BinaryReader $br
-     * @param int $data
+     * @param  \PhpBinaryReader\BinaryReader $br
+     * @param  int                           $data
      * @return int
      */
     private static function bitReader(&$br, $data)
