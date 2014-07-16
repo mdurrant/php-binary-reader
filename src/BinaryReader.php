@@ -4,6 +4,7 @@ namespace PhpBinaryReader;
 
 use PhpBinaryReader\Exception\InvalidDataException;
 use PhpBinaryReader\Type\Bit;
+use PhpBinaryReader\Type\Byte;
 use PhpBinaryReader\Type\Int8;
 use PhpBinaryReader\Type\Int16;
 use PhpBinaryReader\Type\Int32;
@@ -45,6 +46,36 @@ class BinaryReader
      * @var string
      */
     private $endian;
+
+    /**
+     * @var \PhpBinaryReader\Type\Byte
+     */
+    private $byteReader;
+
+    /**
+     * @var \PhpBinaryReader\Type\Bit
+     */
+    private $bitReader;
+
+    /**
+     * @var \PhpBinaryReader\Type\String
+     */
+    private $stringReader;
+
+    /**
+     * @var \PhpBinaryReader\Type\Int8
+     */
+    private $int8Reader;
+
+    /**
+     * @var \PhpBinaryReader\Type\Int16
+     */
+    private $int16Reader;
+
+    /**
+     * @var \PhpBinaryReader\Type\Int32
+     */
+    private $int32Reader;
 
     /**
      * @param  string                    $str
@@ -89,7 +120,7 @@ class BinaryReader
      */
     public function readBits($count)
     {
-        return Bit::readSigned($this, $count);
+        return $this->getBitReader()->readSigned($this, $count);
     }
 
     /**
@@ -98,7 +129,16 @@ class BinaryReader
      */
     public function readUBits($count)
     {
-        return Bit::read($this, $count);
+        return $this->getBitReader()->read($this, $count);
+    }
+
+    /**
+     * @param  int $count
+     * @return int
+     */
+    public function readBytes($count)
+    {
+        return $this->getByteReader()->read($this, $count);
     }
 
     /**
@@ -106,7 +146,7 @@ class BinaryReader
      */
     public function readInt8()
     {
-        return Int8::readSigned($this);
+        return $this->getInt8Reader()->readSigned($this);
     }
 
     /**
@@ -114,7 +154,7 @@ class BinaryReader
      */
     public function readUInt8()
     {
-        return Int8::read($this);
+        return $this->getInt8Reader()->read($this);
     }
 
     /**
@@ -122,7 +162,7 @@ class BinaryReader
      */
     public function readInt16()
     {
-        return Int16::readSigned($this);
+        return $this->getInt16Reader()->readSigned($this);
     }
 
     /**
@@ -130,7 +170,7 @@ class BinaryReader
      */
     public function readUInt16()
     {
-        return Int16::read($this);
+        return $this->getInt16Reader()->read($this);
     }
 
     /**
@@ -138,7 +178,7 @@ class BinaryReader
      */
     public function readInt32()
     {
-        return Int32::readSigned($this);
+        return $this->getInt32Reader()->readSigned($this);
     }
 
     /**
@@ -146,7 +186,7 @@ class BinaryReader
      */
     public function readUInt32()
     {
-        return Int32::read($this);
+        return $this->getInt32Reader()->read($this);
     }
 
     /**
@@ -155,7 +195,7 @@ class BinaryReader
      */
     public function readString($length)
     {
-        return String::read($this, $length);
+        return $this->getStringReader()->read($this, $length);
     }
 
     /**
@@ -164,7 +204,7 @@ class BinaryReader
      */
     public function readAlignedString($length)
     {
-        return String::readAligned($this, $length);
+        return $this->getStringReader()->readAligned($this, $length);
     }
 
     /**
@@ -294,5 +334,77 @@ class BinaryReader
     public function getCurrentBit()
     {
         return $this->currentBit;
+    }
+
+    /**
+     * @return \PhpBinaryReader\Type\Bit
+     */
+    public function getBitReader()
+    {
+        if (!$this->bitReader instanceof Bit) {
+            $this->bitReader = new Bit();
+        }
+
+        return $this->bitReader;
+    }
+
+    /**
+     * @return \PhpBinaryReader\Type\Byte
+     */
+    public function getByteReader()
+    {
+        if (!$this->byteReader instanceof Byte) {
+            $this->byteReader = new Byte();
+        }
+
+        return $this->byteReader;
+    }
+
+    /**
+     * @return \PhpBinaryReader\Type\Int8
+     */
+    public function getInt8Reader()
+    {
+        if (!$this->int8Reader instanceof Int8) {
+            $this->int8Reader = new Int8();
+        }
+
+        return $this->int8Reader;
+    }
+
+    /**
+     * @return \PhpBinaryReader\Type\Int16
+     */
+    public function getInt16Reader()
+    {
+        if (!$this->int16Reader instanceof Int16) {
+            $this->int16Reader = new Int16();
+        }
+
+        return $this->int16Reader;
+    }
+
+    /**
+     * @return \PhpBinaryReader\Type\Int32
+     */
+    public function getInt32Reader()
+    {
+        if (!$this->int32Reader instanceof Int32) {
+            $this->int32Reader = new Int32();
+        }
+
+        return $this->int32Reader;
+    }
+
+    /**
+     * @return \PhpBinaryReader\Type\String
+     */
+    public function getStringReader()
+    {
+        if (!$this->stringReader instanceof String) {
+            $this->stringReader = new String();
+        }
+
+        return $this->stringReader;
     }
 }

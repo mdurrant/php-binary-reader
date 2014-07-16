@@ -11,12 +11,12 @@ class Int16 implements TypeInterface
     /**
      * @var string
      */
-    private static $endianBig = 'n';
+    private $endianBig = 'n';
 
     /**
      * @var string
      */
-    private static $endianLittle = 'v';
+    private $endianLittle = 'v';
 
     /**
      * Returns an Unsigned 16-bit Integer
@@ -26,13 +26,13 @@ class Int16 implements TypeInterface
      * @return int
      * @throws \OutOfBoundsException
      */
-    public static function read(BinaryReader &$br, $length = null)
+    public function read(BinaryReader &$br, $length = null)
     {
         if (($br->getPosition() + 2) > $br->getEofPosition()) {
             throw new \OutOfBoundsException('Cannot read 16-bit int, it exceeds the boundary of the file');
         }
 
-        $endian = $br->getEndian() == Endian::ENDIAN_BIG ? self::$endianBig : self::$endianLittle;
+        $endian = $br->getEndian() == Endian::ENDIAN_BIG ? $this->getEndianBig() : $this->getEndianLittle();
         $segment = substr($br->getInputString(), $br->getPosition(), 2);
 
         $data = unpack($endian, $segment);
@@ -41,7 +41,7 @@ class Int16 implements TypeInterface
         $br->setPosition($br->getPosition() + 2);
 
         if ($br->getCurrentBit() != 0) {
-            $data = self::bitReader($br, $data);
+            $data = $this->bitReader($br, $data);
         }
 
         return $data;
@@ -53,18 +53,19 @@ class Int16 implements TypeInterface
      * @param  \PhpBinaryReader\BinaryReader $br
      * @return int
      */
-    public static function readSigned(&$br)
+    public function readSigned(&$br)
     {
-        self::$endianBig = 's';
-        self::$endianLittle = 's';
+        $this->setEndianBig('s');
+        $this->setEndianLittle('s');
 
-        $value = self::read($br);
+        $value = $this->read($br);
 
-        self::$endianBig = 'n';
-        self::$endianLittle = 'v';
+        $this->setEndianBig('n');
+        $this->setEndianLittle('v');
 
+        $endian = new Endian();
         if ($br->getMachineByteOrder() != Endian::ENDIAN_LITTLE && $br->getEndian() == Endian::ENDIAN_LITTLE) {
-            return Endian::convert($value);
+            return $endian->convert($value);
         } else {
             return $value;
         }
@@ -75,15 +76,48 @@ class Int16 implements TypeInterface
      * @param  int                           $data
      * @return int
      */
-    private static function bitReader(&$br, $data)
+    private function bitReader(&$br, $data)
     {
-        $loMask = BitMask::getMask($br->getCurrentBit(), BitMask::MASK_LO);
-        $hiMask = BitMask::getMask($br->getCurrentBit(), BitMask::MASK_HI);
+        $bitmask = new BitMask();
+        $loMask = $bitmask->getMask($br->getCurrentBit(), BitMask::MASK_LO);
+        $hiMask = $bitmask->getMask($br->getCurrentBit(), BitMask::MASK_HI);
         $hiBits = ($br->getNextByte() & $hiMask) << 8;
         $miBits = ($data & 0xFF00) >> (8 - $br->getCurrentBit());
         $loBits = ($data & $loMask);
         $br->setNextByte($data & 0xFF);
 
         return $hiBits | $miBits | $loBits;
+    }
+
+    /**
+     * @param string $endianBig
+     */
+    public function setEndianBig($endianBig)
+    {
+        $this->endianBig = $endianBig;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndianBig()
+    {
+        return $this->endianBig;
+    }
+
+    /**
+     * @param string $endianLittle
+     */
+    public function setEndianLittle($endianLittle)
+    {
+        $this->endianLittle = $endianLittle;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndianLittle()
+    {
+        return $this->endianLittle;
     }
 }

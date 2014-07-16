@@ -11,7 +11,7 @@ class Bit implements TypeInterface
     /**
      * @var bool
      */
-    private static $signed = false;
+    private $signed = false;
 
     /**
      * Returns an unsigned integer from the bit level
@@ -22,7 +22,7 @@ class Bit implements TypeInterface
      * @throws InvalidDataException
      * @return int
      */
-    public static function read(BinaryReader &$br, $length)
+    public function read(BinaryReader &$br, $length)
     {
         if (!is_int($length)) {
             throw new InvalidDataException('The length parameter must be an integer');
@@ -32,6 +32,7 @@ class Bit implements TypeInterface
             throw new \OutOfBoundsException('Cannot read bits, it exceeds the boundary of the file');
         }
 
+        $bitmask = new BitMask();
         $result = 0;
         $bits = $length;
         $shift = $br->getCurrentBit();
@@ -45,7 +46,7 @@ class Bit implements TypeInterface
             } elseif ($bitsLeft > $bits) {
                 $br->setCurrentBit($br->getCurrentBit() + $bits);
 
-                return ($br->getNextByte() >> $shift) & BitMask::getMask($bits, BitMask::MASK_LO);
+                return ($br->getNextByte() >> $shift) & $bitmask->getMask($bits, BitMask::MASK_LO);
             } else {
                 $br->setCurrentBit(0);
 
@@ -58,27 +59,27 @@ class Bit implements TypeInterface
 
             if ($bytes == 1) {
                 $bits -= 8;
-                $result |= (self::$signed ? $br->readInt8() : $br->readUInt8()) << $bits;
+                $result |= ($this->getSigned() ? $br->readInt8() : $br->readUInt8()) << $bits;
             } elseif ($bytes == 2) {
                 $bits -= 16;
-                $result |= (self::$signed ? $br->readInt16() : $br->readUInt16()) << $bits;
+                $result |= ($this->getSigned() ? $br->readInt16() : $br->readUInt16()) << $bits;
             } elseif ($bytes == 4) {
                 $bits -= 32;
-                $result |= (self::$signed ? $br->readInt32() : $br->readUInt32()) << $bits;
+                $result |= ($this->getSigned() ? $br->readInt32() : $br->readUInt32()) << $bits;
             } else {
                 while ($bits > 8) {
                     $bits -= 8;
-                    $result |= (self::$signed ? $br->readInt8() : $br->readUInt8()) << 8;
+                    $result |= ($this->getSigned() ? $br->readInt8() : $br->readUInt8()) << 8;
                 }
             }
         }
 
         if ($bits != 0) {
-            $code = self::$signed ? 'c' : 'C';
+            $code = $this->getSigned() ? 'c' : 'C';
             $data = unpack($code, substr($br->getInputString(), $br->getPosition(), 1));
             $br->setNextByte($data[1]);
             $br->setPosition($br->getPosition() + 1);
-            $result |= $br->getNextByte() & BitMask::getMask($bits, BitMask::MASK_LO);
+            $result |= $br->getNextByte() & $bitmask->getMask($bits, BitMask::MASK_LO);
         }
 
         $br->setCurrentBit($bits);
@@ -93,12 +94,28 @@ class Bit implements TypeInterface
      * @param  int                           $length
      * @return int
      */
-    public static function readSigned(&$br, $length)
+    public function readSigned(&$br, $length)
     {
-        self::$signed = true;
-        $value = self::read($br, $length);
-        self::$signed = false;
+        $this->setSigned(true);
+        $value = $this->read($br, $length);
+        $this->setSigned(false);
 
         return $value;
+    }
+
+    /**
+     * @param boolean $signed
+     */
+    public function setSigned($signed)
+    {
+        $this->signed = $signed;
+    }
+
+    /**
+     * @return boolean
+     */
+    public function getSigned()
+    {
+        return $this->signed;
     }
 }

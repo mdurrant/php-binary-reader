@@ -6,6 +6,8 @@ class Endian
 {
     const ENDIAN_BIG = 1;
     const ENDIAN_LITTLE = 2;
+    const BIG = 1;
+    const LITTLE = 2;
 
     /**
      * Converts the endianess of a number from big to little or vise-versa
@@ -13,7 +15,7 @@ class Endian
      * @param  int $value
      * @return int
      */
-    public static function convert($value)
+    public function convert($value)
     {
         $data = dechex($value);
 

@@ -21,19 +21,22 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
             [0xFF, 0x00]
         ];
 
-        $this->assertEquals($expected, BitMask::getBitMasks());
+        $bitmask = new Bitmask();
+        $this->assertEquals($expected, $bitmask->getBitMasks());
     }
 
     public function testLoMaskIsReturnedByBit()
     {
-        $this->assertEquals(0x03, BitMask::getMask(2, BitMask::MASK_LO));
-        $this->assertEquals(0xFF, BitMask::getMask(8, BitMask::MASK_LO));
+        $bitmask = new Bitmask();
+        $this->assertEquals(0x03, $bitmask->getMask(2, BitMask::MASK_LO));
+        $this->assertEquals(0xFF, $bitmask->getMask(8, BitMask::MASK_LO));
     }
 
     public function testHiMaskIsReturnedByBit()
     {
-        $this->assertEquals(0x03, BitMask::getMask(6, BitMask::MASK_HI));
-        $this->assertEquals(0xFF, BitMask::getMask(0, BitMask::MASK_HI));
+        $bitmask = new Bitmask();
+        $this->assertEquals(0x03, $bitmask->getMask(6, BitMask::MASK_HI));
+        $this->assertEquals(0xFF, $bitmask->getMask(0, BitMask::MASK_HI));
     }
 
     /**
@@ -41,6 +44,7 @@ class BitMaskTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIsThrownIfMaskTypeIsUnsupported()
     {
-        BitMask::getMask(5, 5);
+        $bitmask = new Bitmask();
+        $bitmask->getMask(5, 5);
     }
 }
