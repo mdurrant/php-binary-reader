@@ -11,7 +11,7 @@ class Int8 implements TypeInterface
     /**
      * @var string
      */
-    private static $endian = 'C';
+    private $endian = 'C';
 
     /**
      * Returns an Unsigned 8-bit Integer (aka a single byte)
@@ -21,7 +21,7 @@ class Int8 implements TypeInterface
      * @return int
      * @throws \OutOfBoundsException
      */
-    public static function read(BinaryReader &$br, $length = null)
+    public function read(BinaryReader &$br, $length = null)
     {
         if (($br->getPosition() + 1) > $br->getEofPosition()) {
             throw new \OutOfBoundsException('Cannot read 32-bit int, it exceeds the boundary of the file');
@@ -29,13 +29,13 @@ class Int8 implements TypeInterface
 
         $segment = substr($br->getInputString(), $br->getPosition(), 1);
 
-        $data = unpack(self::$endian, $segment);
+        $data = unpack($this->getEndian(), $segment);
         $data = $data[1];
 
         $br->setPosition($br->getPosition() + 1);
 
         if ($br->getCurrentBit() != 0) {
-            $data = self::bitReader($br, $data);
+            $data = $this->bitReader($br, $data);
         }
 
         return $data;
@@ -47,11 +47,11 @@ class Int8 implements TypeInterface
      * @param  \PhpBinaryReader\BinaryReader $br
      * @return int
      */
-    public static function readSigned(&$br)
+    public function readSigned(&$br)
     {
-        self::$endian = 'c';
-        $value = self::read($br);
-        self::$endian = 'C';
+        $this->setEndian('c');
+        $value = $this->read($br);
+        $this->setEndian('C');
 
         return $value;
     }
@@ -61,14 +61,31 @@ class Int8 implements TypeInterface
      * @param  int                           $data
      * @return int
      */
-    private static function bitReader(&$br, $data)
+    private function bitReader(&$br, $data)
     {
-        $loMask = BitMask::getMask($br->getCurrentBit(), BitMask::MASK_LO);
-        $hiMask = BitMask::getMask($br->getCurrentBit(), BitMask::MASK_HI);
+        $bitmask = new BitMask();
+        $loMask = $bitmask->getMask($br->getCurrentBit(), BitMask::MASK_LO);
+        $hiMask = $bitmask->getMask($br->getCurrentBit(), BitMask::MASK_HI);
         $hiBits = $br->getNextByte() & $hiMask;
         $loBits = $data & $loMask;
         $br->setNextByte($data);
 
         return $hiBits | $loBits;
+    }
+
+    /**
+     * @param string $endian
+     */
+    public function setEndian($endian)
+    {
+        $this->endian = $endian;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEndian()
+    {
+        return $this->endian;
     }
 }

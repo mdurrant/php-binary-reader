@@ -10,5 +10,5 @@ interface TypeInterface
      * @param \PhpBinaryReader\BinaryReader $br
      * @param int|null                      $length
      */
-    public static function read(BinaryReader &$br, $length);
+    public function read(BinaryReader &$br, $length);
 }

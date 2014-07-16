@@ -6,9 +6,9 @@ use PhpBinaryReader\BinaryReader;
 use PhpBinaryReader\Endian;
 
 /**
- * @coversDefaultClass \PhpBinaryReader\Type\String
+ * @coversDefaultClass \PhpBinaryReader\Type\Byte
  */
-class StringTest extends \PHPUnit_Framework_TestCase
+class ByteTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @var BinaryReader
@@ -21,38 +21,27 @@ class StringTest extends \PHPUnit_Framework_TestCase
     public $brLittle;
 
     /**
-     * @var String
+     * @var Byte
      */
-    public $string;
+    public $byte;
 
     public function setUp()
     {
         $dataBig = file_get_contents(__DIR__ . '/../asset/testfile-big.bin');
         $dataLittle = file_get_contents(__DIR__ . '/../asset/testfile-little.bin');
 
-        $this->string = new String();
+        $this->byte = new Byte();
         $this->brBig = new BinaryReader($dataBig, Endian::ENDIAN_BIG);
         $this->brLittle = new BinaryReader($dataLittle, Endian::ENDIAN_LITTLE);
     }
 
-    public function testStringIsRead()
+    public function testBytesAreRead()
     {
         $this->brBig->setPosition(7);
         $this->brLittle->setPosition(7);
 
-        $this->assertEquals('test!', $this->string->read($this->brBig, 5));
-        $this->assertEquals('test!', $this->string->read($this->brLittle, 5));
-    }
-
-    public function testAlignedStringIsRead()
-    {
-        $this->brBig->setPosition(6);
-        $this->brLittle->setPosition(6);
-        $this->brBig->readBits(1);
-        $this->brLittle->readBits(1);
-
-        $this->assertEquals('test!', $this->string->readAligned($this->brBig, 5));
-        $this->assertEquals('test!', $this->string->readAligned($this->brLittle, 5));
+        $this->assertEquals('test!', $this->byte->read($this->brBig, 5));
+        $this->assertEquals('test!', $this->byte->read($this->brLittle, 5));
     }
 
     /**
@@ -61,7 +50,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
     public function testExceptionIsThrownIfOutOfBoundsBigEndian()
     {
         $this->brBig->readBits(128);
-        $this->string->read($this->brBig, 1);
+        $this->byte->read($this->brBig, 1);
     }
 
     /**
@@ -70,7 +59,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
     public function testExceptionIsThrownIfOutOfBoundsLittleEndian()
     {
         $this->brLittle->readBits(128);
-        $this->string->read($this->brLittle, 1);
+        $this->byte->read($this->brLittle, 1);
     }
 
     /**
@@ -78,7 +67,7 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIsThrownIfLengthIsInvalidBigEndian()
     {
-        $this->string->read($this->brBig, 'foo');
+        $this->byte->read($this->brBig, 'foo');
     }
 
     /**
@@ -86,6 +75,6 @@ class StringTest extends \PHPUnit_Framework_TestCase
      */
     public function testExceptionIsThrownIfLengthIsInvalidLittleEndian()
     {
-        $this->string->read($this->brBig, 'foo');
+        $this->byte->read($this->brBig, 'foo');
     }
 }

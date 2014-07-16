@@ -14,7 +14,7 @@ class String implements TypeInterface
      * @throws \OutOfBoundsException
      * @throws InvalidDataException
      */
-    public static function read(BinaryReader &$br, $length)
+    public function read(BinaryReader &$br, $length)
     {
         if (!is_int($length)) {
             throw new InvalidDataException('The length parameter must be an integer');
@@ -35,10 +35,10 @@ class String implements TypeInterface
      * @param  int                           $length
      * @return string
      */
-    public static function readAligned(BinaryReader &$br, $length)
+    public function readAligned(BinaryReader &$br, $length)
     {
         $br->align();
 
-        return self::read($br, $length);
+        return $this->read($br, $length);
     }
 }

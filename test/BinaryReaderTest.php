@@ -109,6 +109,15 @@ class BinaryReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(2, $this->brLittle->readUInt16());
     }
 
+    public function testBytes()
+    {
+        $this->brBig->setPosition(7);
+        $this->brLittle->setPosition(7);
+
+        $this->assertEquals('test!', $this->brBig->readBytes(5));
+        $this->assertEquals('test!', $this->brLittle->readBytes(5));
+    }
+
     public function testString()
     {
         $this->brBig->setPosition(7);
