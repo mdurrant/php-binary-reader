@@ -56,6 +56,8 @@ Methods
 
 **readBits($length)** returns a variable length of bits (signed)
 
+**readBytes($length)** returns a variable length of bytes
+
 **readString($length)** returns a variable length string
 
 **readAlignedString($length)** aligns the pointer to 0 bits and returns a variable length string
