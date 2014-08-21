@@ -19,8 +19,8 @@ class BinaryReaderTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $dataBig = file_get_contents(__DIR__ . '/asset/testfile-big.bin');
-        $dataLittle = file_get_contents(__DIR__ . '/asset/testfile-little.bin');
+        $dataBig = fopen(__DIR__ . '/asset/testfile-big.bin', 'rb');
+        $dataLittle = fopen(__DIR__ . '/asset/testfile-little.bin', 'rb');
 
         $this->brBig = new BinaryReader($dataBig, Endian::ENDIAN_BIG);
         $this->brLittle = new BinaryReader($dataLittle, Endian::ENDIAN_LITTLE);
