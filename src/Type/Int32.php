@@ -33,7 +33,7 @@ class Int32 implements TypeInterface
         }
 
         $endian = $br->getEndian() == Endian::ENDIAN_BIG ? $this->getEndianBig() : $this->getEndianLittle();
-        $segment = substr($br->getInputString(), $br->getPosition(), 4);
+        $segment = fread($br->getInputHandle(), 4);
 
         $data = unpack($endian, $segment);
         $data = $data[1];

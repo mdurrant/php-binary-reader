@@ -27,7 +27,7 @@ class Int8 implements TypeInterface
             throw new \OutOfBoundsException('Cannot read 32-bit int, it exceeds the boundary of the file');
         }
 
-        $segment = substr($br->getInputString(), $br->getPosition(), 1);
+        $segment = fread($br->getInputHandle(), 1);
 
         $data = unpack($this->getEndian(), $segment);
         $data = $data[1];

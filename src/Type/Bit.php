@@ -76,7 +76,7 @@ class Bit implements TypeInterface
 
         if ($bits != 0) {
             $code = $this->getSigned() ? 'c' : 'C';
-            $data = unpack($code, substr($br->getInputString(), $br->getPosition(), 1));
+            $data = unpack($code, fread($br->getInputHandle(), 1));
             $br->setNextByte($data[1]);
             $br->setPosition($br->getPosition() + 1);
             $result |= $br->getNextByte() & $bitmask->getMask($bits, BitMask::MASK_LO);
