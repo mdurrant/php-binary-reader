@@ -256,7 +256,7 @@ class BinaryReader
      */
     public function setInputString($inputString)
     {
-        $handle = fopen('php://memory', 'r+');
+        $handle = fopen('php://memory', 'br+');
         fwrite($handle, $inputString);
         rewind($handle);
         $this->inputHandle = $handle;
