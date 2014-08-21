@@ -207,6 +207,17 @@ class BinaryReaderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('foo', $this->brBig->getInputString());
     }
 
+    public function testInputHandle()
+    {
+        // Create a handle in-memory
+        $handle = fopen('php://memory', 'r+');
+        fwrite($handle, 'Test');
+        rewind($handle);
+
+        $this->brBig->setInputHandle($handle);
+        $this->assertEquals($handle, $this->brBig->getInputHandle());
+    }
+
     public function testMachineByteOrder()
     {
         $this->assertEquals(Endian::ENDIAN_LITTLE, $this->brBig->getMachineByteOrder());
