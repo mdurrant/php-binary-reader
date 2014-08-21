@@ -5,223 +5,265 @@ namespace PhpBinaryReader;
 /**
  * @coversDefaultClass \PhpBinaryReader\BinaryReader
  */
-class BinaryReaderTest extends \PHPUnit_Framework_TestCase
+class BinaryReaderTest extends AbstractTestCase
 {
-    /**
-     * @var BinaryReader
-     */
-    public $brBig;
-
-    /**
-     * @var BinaryReader
-     */
-    public $brLittle;
-
     public function setUp()
     {
         $dataBig = fopen(__DIR__ . '/asset/testfile-big.bin', 'rb');
         $dataLittle = fopen(__DIR__ . '/asset/testfile-little.bin', 'rb');
 
-        $this->brBig = new BinaryReader($dataBig, Endian::ENDIAN_BIG);
-        $this->brLittle = new BinaryReader($dataLittle, Endian::ENDIAN_LITTLE);
+        $brBig = new BinaryReader($dataBig, Endian::ENDIAN_BIG);
+        $brLittle = new BinaryReader($dataLittle, Endian::ENDIAN_LITTLE);
     }
 
-    public function testEof()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testEof($brBig, $brLittle)
     {
-        $this->brBig->setPosition(15);
-        $this->assertFalse($this->brBig->isEof());
-        $this->brBig->setPosition(16);
-        $this->assertTrue($this->brBig->isEof());
+        $brBig->setPosition(15);
+        $this->assertFalse($brBig->isEof());
+        $brBig->setPosition(16);
+        $this->assertTrue($brBig->isEof());
 
-        $this->brLittle->setPosition(15);
-        $this->assertFalse($this->brLittle->isEof());
-        $this->brLittle->setPosition(16);
-        $this->assertTrue($this->brLittle->isEof());
+        $brLittle->setPosition(15);
+        $this->assertFalse($brLittle->isEof());
+        $brLittle->setPosition(16);
+        $this->assertTrue($brLittle->isEof());
     }
 
-    public function testBitReader()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testBitReader($brBig, $brLittle)
     {
-        $this->assertEquals(50331648, $this->brBig->readBits(32));
-        $this->assertEquals(3, $this->brLittle->readBits(32));
+        $this->assertEquals(50331648, $brBig->readBits(32));
+        $this->assertEquals(3, $brLittle->readBits(32));
 
-        $this->brBig->setPosition(0);
-        $this->brLittle->setPosition(0);
+        $brBig->setPosition(0);
+        $brLittle->setPosition(0);
 
-        $this->assertEquals(3, $this->brBig->readUBits(32));
-        $this->assertEquals(3, $this->brLittle->readUBits(32));
+        $this->assertEquals(3, $brBig->readUBits(32));
+        $this->assertEquals(3, $brLittle->readUBits(32));
     }
 
-    public function testInt8()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testInt8($brBig, $brLittle)
     {
-        $this->brLittle->setPosition(6);
-        $this->brBig->setPosition(6);
+        $brLittle->setPosition(6);
+        $brBig->setPosition(6);
 
-        $this->assertEquals(103, $this->brBig->readInt8());
-        $this->assertEquals(103, $this->brLittle->readInt8());
+        $this->assertEquals(103, $brBig->readInt8());
+        $this->assertEquals(103, $brLittle->readInt8());
 
-        $this->brLittle->setPosition(6);
-        $this->brBig->setPosition(6);
+        $brLittle->setPosition(6);
+        $brBig->setPosition(6);
 
-        $this->assertEquals(103, $this->brBig->readUInt8());
-        $this->assertEquals(103, $this->brLittle->readUInt8());
+        $this->assertEquals(103, $brBig->readUInt8());
+        $this->assertEquals(103, $brLittle->readUInt8());
     }
 
-    public function testInt16()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testInt16($brBig, $brLittle)
     {
-        $this->brLittle->setPosition(4);
-        $this->brBig->setPosition(4);
+        $brLittle->setPosition(4);
+        $brBig->setPosition(4);
 
-        $this->assertEquals(512, $this->brBig->readInt16());
-        $this->assertEquals(2, $this->brLittle->readInt16());
+        $this->assertEquals(512, $brBig->readInt16());
+        $this->assertEquals(2, $brLittle->readInt16());
 
-        $this->brLittle->setPosition(4);
-        $this->brBig->setPosition(4);
+        $brLittle->setPosition(4);
+        $brBig->setPosition(4);
 
-        $this->assertEquals(2, $this->brBig->readUInt16());
-        $this->assertEquals(2, $this->brLittle->readUInt16());
+        $this->assertEquals(2, $brBig->readUInt16());
+        $this->assertEquals(2, $brLittle->readUInt16());
     }
 
-    public function testInt32()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testInt32($brBig, $brLittle)
     {
-        $this->assertEquals(50331648, $this->brBig->readInt32());
-        $this->assertEquals(3, $this->brLittle->readInt32());
+        $this->assertEquals(50331648, $brBig->readInt32());
+        $this->assertEquals(3, $brLittle->readInt32());
 
-        $this->brLittle->setPosition(0);
-        $this->brBig->setPosition(0);
+        $brLittle->setPosition(0);
+        $brBig->setPosition(0);
 
-        $this->assertEquals(3, $this->brBig->readUInt32());
-        $this->assertEquals(3, $this->brLittle->readUInt32());
+        $this->assertEquals(3, $brBig->readUInt32());
+        $this->assertEquals(3, $brLittle->readUInt32());
     }
 
-    public function testAlign()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testAlign($brBig, $brLittle)
     {
-        $this->brBig->readBits(30);
-        $this->brLittle->readBits(30);
+        $brBig->readBits(30);
+        $brLittle->readBits(30);
 
-        $this->brBig->align();
-        $this->brLittle->align();
+        $brBig->align();
+        $brLittle->align();
 
-        $this->assertEquals(0, $this->brBig->getCurrentBit());
-        $this->assertEquals(0, $this->brLittle->getCurrentBit());
-        $this->assertFalse($this->brBig->getNextByte());
-        $this->assertFalse($this->brLittle->getNextByte());
-        $this->assertEquals(2, $this->brBig->readUInt16());
-        $this->assertEquals(2, $this->brLittle->readUInt16());
+        $this->assertEquals(0, $brBig->getCurrentBit());
+        $this->assertEquals(0, $brLittle->getCurrentBit());
+        $this->assertFalse($brBig->getNextByte());
+        $this->assertFalse($brLittle->getNextByte());
+        $this->assertEquals(2, $brBig->readUInt16());
+        $this->assertEquals(2, $brLittle->readUInt16());
     }
 
-    public function testBytes()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testBytes($brBig, $brLittle)
     {
-        $this->brBig->setPosition(7);
-        $this->brLittle->setPosition(7);
+        $brBig->setPosition(7);
+        $brLittle->setPosition(7);
 
-        $this->assertEquals('test!', $this->brBig->readBytes(5));
-        $this->assertEquals('test!', $this->brLittle->readBytes(5));
+        $this->assertEquals('test!', $brBig->readBytes(5));
+        $this->assertEquals('test!', $brLittle->readBytes(5));
     }
 
-    public function testString()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testString($brBig, $brLittle)
     {
-        $this->brBig->setPosition(7);
-        $this->brLittle->setPosition(7);
+        $brBig->setPosition(7);
+        $brLittle->setPosition(7);
 
-        $this->assertEquals('test!', $this->brBig->readString(5));
-        $this->assertEquals('test!', $this->brLittle->readString(5));
+        $this->assertEquals('test!', $brBig->readString(5));
+        $this->assertEquals('test!', $brLittle->readString(5));
     }
 
-    public function testAlignedString()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testAlignedString($brBig, $brLittle)
     {
-        $this->brBig->setPosition(6);
-        $this->brLittle->setPosition(6);
+        $brBig->setPosition(6);
+        $brLittle->setPosition(6);
 
-        $this->brBig->readBits(4);
-        $this->brLittle->readBits(4);
+        $brBig->readBits(4);
+        $brLittle->readBits(4);
 
-        $this->assertEquals('test!', $this->brBig->readAlignedString(5));
-        $this->assertEquals('test!', $this->brLittle->readAlignedString(5));
+        $this->assertEquals('test!', $brBig->readAlignedString(5));
+        $this->assertEquals('test!', $brLittle->readAlignedString(5));
     }
 
-    public function testEndianSet()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testEndianSet($brBig, $brLittle)
     {
-        $this->brBig->setEndian(Endian::ENDIAN_LITTLE);
-        $this->brLittle->setEndian(Endian::ENDIAN_BIG);
+        $brBig->setEndian(Endian::ENDIAN_LITTLE);
+        $brLittle->setEndian(Endian::ENDIAN_BIG);
 
-        $this->assertEquals(Endian::ENDIAN_LITTLE, $this->brBig->getEndian());
-        $this->assertEquals(Endian::ENDIAN_BIG, $this->brLittle->getEndian());
+        $this->assertEquals(Endian::ENDIAN_LITTLE, $brBig->getEndian());
+        $this->assertEquals(Endian::ENDIAN_BIG, $brLittle->getEndian());
     }
 
     /**
      * @expectedException \PhpBinaryReader\Exception\InvalidDataException
+     * @dataProvider binaryReaders
      */
-    public function testExceptionIsThrownIfInvalidEndianSet()
+    public function testExceptionIsThrownIfInvalidEndianSet($brBig, $brLittle)
     {
-        $this->brBig->setEndian('foo');
+        $brBig->setEndian('foo');
     }
 
-    public function testPositionSet()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testPositionSet($brBig, $brLittle)
     {
-        $this->brBig->setPosition(5);
-        $this->assertEquals(5, $this->brBig->getPosition());
+        $brBig->setPosition(5);
+        $this->assertEquals(5, $brBig->getPosition());
     }
 
-    public function testEofPosition()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testEofPosition($brBig, $brLittle)
     {
-        $this->assertEquals(16, $this->brBig->getEofPosition());
-        $this->assertEquals(16, $this->brLittle->getEofPosition());
+        $this->assertEquals(16, $brBig->getEofPosition());
+        $this->assertEquals(16, $brLittle->getEofPosition());
     }
 
-    public function testNextByte()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testNextByte($brBig, $brLittle)
     {
-        $this->brBig->readBits(70);
-        $this->brLittle->readBits(70);
+        $brBig->readBits(70);
+        $brLittle->readBits(70);
 
-        $this->assertEquals(101, $this->brBig->getNextByte());
-        $this->assertEquals(101, $this->brLittle->getNextByte());
+        $this->assertEquals(101, $brBig->getNextByte());
+        $this->assertEquals(101, $brLittle->getNextByte());
 
-        $this->brBig->setNextByte(5);
-        $this->brLittle->setNextByte(5);
+        $brBig->setNextByte(5);
+        $brLittle->setNextByte(5);
 
-        $this->assertEquals(5, $this->brBig->getNextByte());
-        $this->assertEquals(5, $this->brLittle->getNextByte());
+        $this->assertEquals(5, $brBig->getNextByte());
+        $this->assertEquals(5, $brLittle->getNextByte());
     }
 
-    public function testCurrentBit()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testCurrentBit($brBig, $brLittle)
     {
-        $this->assertEquals(0, $this->brBig->getCurrentBit());
-        $this->assertEquals(0, $this->brLittle->getCurrentBit());
+        $this->assertEquals(0, $brBig->getCurrentBit());
+        $this->assertEquals(0, $brLittle->getCurrentBit());
 
-        $this->brBig->readBits(3);
-        $this->brLittle->readBits(3);
+        $brBig->readBits(3);
+        $brLittle->readBits(3);
 
-        $this->assertEquals(3, $this->brBig->getCurrentBit());
-        $this->assertEquals(3, $this->brLittle->getCurrentBit());
+        $this->assertEquals(3, $brBig->getCurrentBit());
+        $this->assertEquals(3, $brLittle->getCurrentBit());
 
-        $this->brBig->setCurrentBit(7);
-        $this->brLittle->setCurrentBit(7);
+        $brBig->setCurrentBit(7);
+        $brLittle->setCurrentBit(7);
 
-        $this->assertEquals(7, $this->brBig->getCurrentBit());
-        $this->assertEquals(7, $this->brLittle->getCurrentBit());
+        $this->assertEquals(7, $brBig->getCurrentBit());
+        $this->assertEquals(7, $brLittle->getCurrentBit());
     }
 
-    public function testInputString()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testInputString($brBig, $brLittle)
     {
-        $this->brBig->setInputString('foo');
-        $this->assertEquals('foo', $this->brBig->getInputString());
+        $brBig->setInputString('foo');
+        $this->assertEquals('foo', $brBig->getInputString());
     }
 
-    public function testInputHandle()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testInputHandle($brBig, $brLittle)
     {
         // Create a handle in-memory
         $handle = fopen('php://memory', 'r+');
         fwrite($handle, 'Test');
         rewind($handle);
 
-        $this->brBig->setInputHandle($handle);
-        $this->assertEquals($handle, $this->brBig->getInputHandle());
+        $brBig->setInputHandle($handle);
+        $this->assertEquals($handle, $brBig->getInputHandle());
     }
 
-    public function testMachineByteOrder()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testMachineByteOrder($brBig, $brLittle)
     {
-        $this->assertEquals(Endian::ENDIAN_LITTLE, $this->brBig->getMachineByteOrder());
-        $this->brBig->setMachineByteOrder(Endian::ENDIAN_BIG);
-        $this->assertEquals(Endian::ENDIAN_BIG, $this->brBig->getMachineByteOrder());
+        $this->assertEquals(Endian::ENDIAN_LITTLE, $brBig->getMachineByteOrder());
+        $brBig->setMachineByteOrder(Endian::ENDIAN_BIG);
+        $this->assertEquals(Endian::ENDIAN_BIG, $brBig->getMachineByteOrder());
     }
 }
