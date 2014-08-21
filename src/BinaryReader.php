@@ -261,7 +261,7 @@ class BinaryReader
         rewind($handle);
         $this->inputHandle = $handle;
 
-        return $this; 
+        return $this;
     }
 
     /**
