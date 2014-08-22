@@ -33,7 +33,7 @@ class Int16 implements TypeInterface
         }
 
         $endian = $br->getEndian() == Endian::ENDIAN_BIG ? $this->getEndianBig() : $this->getEndianLittle();
-        $segment = substr($br->getInputString(), $br->getPosition(), 2);
+        $segment = fread($br->getInputHandle(), 2);
 
         $data = unpack($endian, $segment);
         $data = $data[1];

@@ -2,24 +2,15 @@
 
 namespace PhpBinaryReader\Type;
 
+use PhpBinaryReader\AbstractTestCase;
 use PhpBinaryReader\BinaryReader;
 use PhpBinaryReader\Endian;
 
 /**
  * @coversDefaultClass \PhpBinaryReader\Type\String
  */
-class StringTest extends \PHPUnit_Framework_TestCase
+class StringTest extends AbstractTestCase
 {
-    /**
-     * @var BinaryReader
-     */
-    public $brBig;
-
-    /**
-     * @var BinaryReader
-     */
-    public $brLittle;
-
     /**
      * @var String
      */
@@ -27,65 +18,70 @@ class StringTest extends \PHPUnit_Framework_TestCase
 
     public function setUp()
     {
-        $dataBig = file_get_contents(__DIR__ . '/../asset/testfile-big.bin');
-        $dataLittle = file_get_contents(__DIR__ . '/../asset/testfile-little.bin');
-
         $this->string = new String();
-        $this->brBig = new BinaryReader($dataBig, Endian::ENDIAN_BIG);
-        $this->brLittle = new BinaryReader($dataLittle, Endian::ENDIAN_LITTLE);
     }
 
-    public function testStringIsRead()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testStringIsRead($brBig, $brLittle)
     {
-        $this->brBig->setPosition(7);
-        $this->brLittle->setPosition(7);
+        $brBig->setPosition(7);
+        $brLittle->setPosition(7);
 
-        $this->assertEquals('test!', $this->string->read($this->brBig, 5));
-        $this->assertEquals('test!', $this->string->read($this->brLittle, 5));
+        $this->assertEquals('test!', $this->string->read($brBig, 5));
+        $this->assertEquals('test!', $this->string->read($brLittle, 5));
     }
 
-    public function testAlignedStringIsRead()
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testAlignedStringIsRead($brBig, $brLittle)
     {
-        $this->brBig->setPosition(6);
-        $this->brLittle->setPosition(6);
-        $this->brBig->readBits(1);
-        $this->brLittle->readBits(1);
+        $brBig->setPosition(6);
+        $brLittle->setPosition(6);
+        $brBig->readBits(1);
+        $brLittle->readBits(1);
 
-        $this->assertEquals('test!', $this->string->readAligned($this->brBig, 5));
-        $this->assertEquals('test!', $this->string->readAligned($this->brLittle, 5));
+        $this->assertEquals('test!', $this->string->readAligned($brBig, 5));
+        $this->assertEquals('test!', $this->string->readAligned($brLittle, 5));
     }
 
     /**
      * @expectedException \OutOfBoundsException
+     * @dataProvider binaryReaders
      */
-    public function testExceptionIsThrownIfOutOfBoundsBigEndian()
+    public function testExceptionIsThrownIfOutOfBoundsBigEndian($brBig, $brLittle)
     {
-        $this->brBig->readBits(128);
-        $this->string->read($this->brBig, 1);
+        $brBig->readBits(128);
+        $this->string->read($brBig, 1);
     }
 
     /**
      * @expectedException \OutOfBoundsException
+     * @dataProvider binaryReaders
      */
-    public function testExceptionIsThrownIfOutOfBoundsLittleEndian()
+    public function testExceptionIsThrownIfOutOfBoundsLittleEndian($brBig, $brLittle)
     {
-        $this->brLittle->readBits(128);
-        $this->string->read($this->brLittle, 1);
+        $brLittle->readBits(128);
+        $this->string->read($brLittle, 1);
     }
 
     /**
      * @expectedException \PhpBinaryReader\Exception\InvalidDataException
+     * @dataProvider binaryReaders
      */
-    public function testExceptionIsThrownIfLengthIsInvalidBigEndian()
+    public function testExceptionIsThrownIfLengthIsInvalidBigEndian($brBig, $brLittle)
     {
-        $this->string->read($this->brBig, 'foo');
+        $this->string->read($brBig, 'foo');
     }
 
     /**
      * @expectedException \PhpBinaryReader\Exception\InvalidDataException
+     * @dataProvider binaryReaders
      */
-    public function testExceptionIsThrownIfLengthIsInvalidLittleEndian()
+    public function testExceptionIsThrownIfLengthIsInvalidLittleEndian($brBig, $brLittle)
     {
-        $this->string->read($this->brBig, 'foo');
+        $this->string->read($brBig, 'foo');
     }
 }

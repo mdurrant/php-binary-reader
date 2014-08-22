@@ -28,7 +28,7 @@ class Byte implements TypeInterface
             throw new \OutOfBoundsException('Cannot read bytes, it exceeds the boundary of the file');
         }
 
-        $segment = substr($br->getInputString(), $br->getPosition(), $length);
+        $segment = fread($br->getInputHandle(), $length);
 
         $br->setPosition($br->getPosition() + $length);
 

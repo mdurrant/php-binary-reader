@@ -10,15 +10,15 @@ You probably wouldn't be here if you hadn't run into a scenario where you needed
 binary data. The honest truth is PHP really stinks at this stuff, but as long as we're going to be using it we may as
 well do our best to make it as painless as possible.
 
-The purpose of this binary reader is to accept a string of file contents and provide a set of methods inspired by .NET
-to traverse it.
+The purpose of this binary reader is to accept a string of file contents or file resource and provide a set of methods 
+inspired by .NET to traverse it.
 
 Note on Endians
 ---
 The reader is designed to work on little endian machines, which is going to apply to most scenarios as all x86 and x86-64
 machines are little endian. If you have somehow found yourself on a big endian machine, you need to inform the class or
 you may not be able to properly read signed integers in the file you're parsing.
-```
+```php
 $fileData = file_get_contents('somefile.bin');
 $br = new BinaryReader($fileData);
 $br->setMachineByteOrder(Endian::ENDIAN_BIG);
@@ -27,9 +27,14 @@ $br->setMachineByteOrder(Endian::ENDIAN_BIG);
 
 Example Usage
 ---
-```
+
+```php
 $fileData = file_get_contents('somefile.bin');
 $br = new BinaryReader($fileData, Endian::ENDIAN_LITTLE);
+// or
+$fileResource = fopen('somefile.bin', 'rb');
+$br = new BinaryReader($fileResource, Endian::ENDIAN_LITTLE);
+
 $magic = $br->readUInt32();
 $offset = $br->readUInt16();
 $length = $br->readUInt16();
@@ -38,7 +43,7 @@ $length = $br->readUInt16();
 
 Methods
 ---
-**__construct($str, $endian)** a string must be provided to use this class, an endian is optional (string [big|little], or use the constants in the Endian class), it will default to little if not provided.
+**__construct($input, $endian)** a string or file resource must be provided to use this class, an endian is optional (string [big|little], or use the constants in the Endian class), it will default to little if not provided.
 
 **readUInt8()** returns a single 8 bit byte as an unsigned integer
 
