@@ -266,4 +266,16 @@ class BinaryReaderTest extends AbstractTestCase
         $brBig->setMachineByteOrder(Endian::ENDIAN_BIG);
         $this->assertEquals(Endian::ENDIAN_BIG, $brBig->getMachineByteOrder());
     }
+
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testReadFromHandle($brBig, $brLittle)
+    {
+        $this->assertEquals('03000000', bin2hex($brLittle->readFromHandle(4)));
+        $this->assertEquals(4, $brLittle->getPosition());
+
+        $this->assertEquals("0x03", bin2hex($brBig->readFromHandle(4)));
+        $this->assertEquals(4, $brBig->getPosition());
+    }
 }

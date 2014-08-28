@@ -33,12 +33,10 @@ class Int32 implements TypeInterface
         }
 
         $endian = $br->getEndian() == Endian::ENDIAN_BIG ? $this->getEndianBig() : $this->getEndianLittle();
-        $segment = fread($br->getInputHandle(), 4);
+        $segment = $br->readFromHandle(4);
 
         $data = unpack($endian, $segment);
         $data = $data[1];
-
-        $br->setPosition($br->getPosition() + 4);
 
         if ($br->getCurrentBit() != 0) {
             $data = $this->bitReader($br, $data);

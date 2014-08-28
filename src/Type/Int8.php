@@ -27,12 +27,10 @@ class Int8 implements TypeInterface
             throw new \OutOfBoundsException('Cannot read 32-bit int, it exceeds the boundary of the file');
         }
 
-        $segment = fread($br->getInputHandle(), 1);
+        $segment = $br->readFromHandle(1);
 
         $data = unpack($this->getEndian(), $segment);
         $data = $data[1];
-
-        $br->setPosition($br->getPosition() + 1);
 
         if ($br->getCurrentBit() != 0) {
             $data = $this->bitReader($br, $data);

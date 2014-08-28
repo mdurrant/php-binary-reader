@@ -439,4 +439,16 @@ class BinaryReader
 
         return $this->stringReader;
     }
+
+    /**
+     * Read a length of characters from the input handle, updating the
+     * internal position marker.
+     *
+     * @return string
+     */
+    public function readFromHandle($length)
+    {
+        $this->position += $length;
+        return fread($this->inputHandle, $length);
+    }
 }

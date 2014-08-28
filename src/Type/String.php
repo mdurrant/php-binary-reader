@@ -24,8 +24,7 @@ class String implements TypeInterface
             throw new \OutOfBoundsException('Cannot read string, it exceeds the boundary of the file');
         }
 
-        $str = fread($br->getInputHandle(), $length);
-        $br->setPosition($br->getPosition() + $length);
+        $str = $br->readFromHandle($length);
 
         return $str;
     }
