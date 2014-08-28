@@ -103,11 +103,7 @@ class BinaryReader
      */
     public function isEof()
     {
-        if ($this->getPosition() >= $this->getEofPosition()) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->position >= $this->eofPosition;
     }
 
     /**
