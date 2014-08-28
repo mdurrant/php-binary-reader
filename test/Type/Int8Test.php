@@ -130,4 +130,10 @@ class Int8Test extends AbstractTestCase
         $brLittle->readBits(128);
         $this->int8->read($brLittle);
     }
+
+    public function testEndian()
+    {
+        $this->int8->setEndian('X');
+        $this->assertEquals('X', $this->int8->getEndian());
+    }
 }

@@ -110,4 +110,14 @@ class Int32Test extends AbstractTestCase
         $brLittle->setEndian(Endian::ENDIAN_LITTLE);
         $this->assertEquals(3, $this->int32->readSigned($brLittle));
     }
+
+    public function testEndian()
+    {
+        $this->int32->setEndianBig('X');
+        $this->assertEquals('X', $this->int32->getEndianBig());
+
+        $this->int32->setEndianLittle('Y');
+        $this->assertEquals('Y', $this->int32->getEndianLittle());
+    }
+
 }

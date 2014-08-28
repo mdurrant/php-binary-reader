@@ -125,4 +125,13 @@ class Int16Test extends AbstractTestCase
         $brLittle->setEndian(Endian::ENDIAN_LITTLE);
         $this->assertEquals(3, $this->int16->readSigned($brLittle));
     }
+
+    public function testEndian()
+    {
+        $this->int16->setEndianBig('X');
+        $this->assertEquals('X', $this->int16->getEndianBig());
+
+        $this->int16->setEndianLittle('Y');
+        $this->assertEquals('Y', $this->int16->getEndianLittle());
+    }
 }

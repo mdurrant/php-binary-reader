@@ -294,4 +294,16 @@ class BinaryReaderTest extends AbstractTestCase
         $this->assertEquals("0x03", bin2hex($brBig->readFromHandle(4)));
         $this->assertEquals(4, $brBig->getPosition());
     }
+
+    public function testReaders()
+    {
+        $dataBig = fopen(__DIR__ . '/asset/testfile-big.bin', 'rb');
+        $brBig = new BinaryReader($dataBig, Endian::ENDIAN_BIG);
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Bit', $brBig->getBitReader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Byte', $brBig->getByteReader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Int16', $brBig->getInt16Reader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Int32', $brBig->getInt32Reader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Int8', $brBig->getInt8Reader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\String', $brBig->getStringReader());
+    }
 }
