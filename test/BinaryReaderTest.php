@@ -35,6 +35,22 @@ class BinaryReaderTest extends AbstractTestCase
     /**
      * @dataProvider binaryReaders
      */
+    public function testCanReadBytes($brBig, $brLittle)
+    {
+        $brBig->setPosition(15);
+        $this->assertTrue($brBig->canReadBytes());
+        $this->assertTrue($brBig->canReadBytes(1));
+        $this->assertFalse($brBig->canReadBytes(2));
+
+        $brLittle->setPosition(15);
+        $this->assertTrue($brLittle->canReadBytes());
+        $this->assertTrue($brLittle->canReadBytes(1));
+        $this->assertFalse($brLittle->canReadBytes(2));
+    }
+
+    /**
+     * @dataProvider binaryReaders
+     */
     public function testBitReader($brBig, $brLittle)
     {
         $this->assertEquals(50331648, $brBig->readBits(32));

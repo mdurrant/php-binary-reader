@@ -20,7 +20,7 @@ class String implements TypeInterface
             throw new InvalidDataException('The length parameter must be an integer');
         }
 
-        if (($length + $br->getPosition()) > $br->getEofPosition()) {
+        if (!$br->canReadBytes($length)) {
             throw new \OutOfBoundsException('Cannot read string, it exceeds the boundary of the file');
         }
 

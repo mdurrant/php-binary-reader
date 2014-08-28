@@ -28,7 +28,7 @@ class Int16 implements TypeInterface
      */
     public function read(BinaryReader &$br, $length = null)
     {
-        if (($br->getPosition() + 2) > $br->getEofPosition()) {
+        if (!$br->canReadBytes(2)) {
             throw new \OutOfBoundsException('Cannot read 16-bit int, it exceeds the boundary of the file');
         }
 

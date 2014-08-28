@@ -107,6 +107,14 @@ class BinaryReader
     }
 
     /**
+     * @ return bool
+     */
+    public function canReadBytes($length = 0)
+    {
+        return $this->position + $length <= $this->eofPosition;
+    }
+
+    /**
      * @return void
      */
     public function align()

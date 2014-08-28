@@ -28,7 +28,7 @@ class Int32 implements TypeInterface
      */
     public function read(BinaryReader &$br, $length = null)
     {
-        if (($br->getPosition() + 4) > $br->getEofPosition()) {
+        if (!$br->canReadBytes(4)) {
             throw new \OutOfBoundsException('Cannot read 32-bit int, it exceeds the boundary of the file');
         }
 

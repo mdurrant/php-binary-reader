@@ -28,7 +28,7 @@ class Bit implements TypeInterface
             throw new InvalidDataException('The length parameter must be an integer');
         }
 
-        if (($length / 8) + $br->getPosition() > $br->getEofPosition()) {
+        if (!$br->canReadBytes($length / 8)) {
             throw new \OutOfBoundsException('Cannot read bits, it exceeds the boundary of the file');
         }
 
