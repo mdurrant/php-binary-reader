@@ -29,7 +29,7 @@ class Int8 implements TypeInterface
 
         $segment = $br->readFromHandle(1);
 
-        $data = unpack($this->getEndian(), $segment);
+        $data = unpack($this->endian, $segment);
         $data = $data[1];
 
         if ($br->getCurrentBit() != 0) {

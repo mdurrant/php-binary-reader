@@ -32,7 +32,7 @@ class Int32 implements TypeInterface
             throw new \OutOfBoundsException('Cannot read 32-bit int, it exceeds the boundary of the file');
         }
 
-        $endian = $br->getEndian() == Endian::ENDIAN_BIG ? $this->getEndianBig() : $this->getEndianLittle();
+        $endian = $br->getEndian() == Endian::ENDIAN_BIG ? $this->endianBig : $this->endianLittle;
         $segment = $br->readFromHandle(4);
 
         $data = unpack($endian, $segment);
