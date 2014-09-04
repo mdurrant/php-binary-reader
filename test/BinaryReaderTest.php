@@ -35,6 +35,22 @@ class BinaryReaderTest extends AbstractTestCase
     /**
      * @dataProvider binaryReaders
      */
+    public function testCanReadBytes($brBig, $brLittle)
+    {
+        $brBig->setPosition(15);
+        $this->assertTrue($brBig->canReadBytes());
+        $this->assertTrue($brBig->canReadBytes(1));
+        $this->assertFalse($brBig->canReadBytes(2));
+
+        $brLittle->setPosition(15);
+        $this->assertTrue($brLittle->canReadBytes());
+        $this->assertTrue($brLittle->canReadBytes(1));
+        $this->assertFalse($brLittle->canReadBytes(2));
+    }
+
+    /**
+     * @dataProvider binaryReaders
+     */
     public function testBitReader($brBig, $brLittle)
     {
         $this->assertEquals(50331648, $brBig->readBits(32));
@@ -265,5 +281,29 @@ class BinaryReaderTest extends AbstractTestCase
         $this->assertEquals(Endian::ENDIAN_LITTLE, $brBig->getMachineByteOrder());
         $brBig->setMachineByteOrder(Endian::ENDIAN_BIG);
         $this->assertEquals(Endian::ENDIAN_BIG, $brBig->getMachineByteOrder());
+    }
+
+    /**
+     * @dataProvider binaryReaders
+     */
+    public function testReadFromHandle($brBig, $brLittle)
+    {
+        $this->assertEquals('03000000', bin2hex($brLittle->readFromHandle(4)));
+        $this->assertEquals(4, $brLittle->getPosition());
+
+        $this->assertEquals("0x03", bin2hex($brBig->readFromHandle(4)));
+        $this->assertEquals(4, $brBig->getPosition());
+    }
+
+    public function testReaders()
+    {
+        $dataBig = fopen(__DIR__ . '/asset/testfile-big.bin', 'rb');
+        $brBig = new BinaryReader($dataBig, Endian::ENDIAN_BIG);
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Bit', $brBig->getBitReader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Byte', $brBig->getByteReader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Int16', $brBig->getInt16Reader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Int32', $brBig->getInt32Reader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Int8', $brBig->getInt8Reader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\String', $brBig->getStringReader());
     }
 }

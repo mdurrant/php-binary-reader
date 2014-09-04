@@ -24,13 +24,11 @@ class Byte implements TypeInterface
 
         $br->align();
 
-        if (($br->getPosition() + $length) > $br->getEofPosition()) {
+        if (!$br->canReadBytes($length)) {
             throw new \OutOfBoundsException('Cannot read bytes, it exceeds the boundary of the file');
         }
 
-        $segment = fread($br->getInputHandle(), $length);
-
-        $br->setPosition($br->getPosition() + $length);
+        $segment = $br->readFromHandle($length);
 
         return $segment;
     }

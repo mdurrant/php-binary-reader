@@ -28,17 +28,15 @@ class Int16 implements TypeInterface
      */
     public function read(BinaryReader &$br, $length = null)
     {
-        if (($br->getPosition() + 2) > $br->getEofPosition()) {
+        if (!$br->canReadBytes(2)) {
             throw new \OutOfBoundsException('Cannot read 16-bit int, it exceeds the boundary of the file');
         }
 
-        $endian = $br->getEndian() == Endian::ENDIAN_BIG ? $this->getEndianBig() : $this->getEndianLittle();
-        $segment = fread($br->getInputHandle(), 2);
+        $endian = $br->getEndian() == Endian::ENDIAN_BIG ? $this->endianBig : $this->endianLittle;
+        $segment = $br->readFromHandle(2);
 
         $data = unpack($endian, $segment);
         $data = $data[1];
-
-        $br->setPosition($br->getPosition() + 2);
 
         if ($br->getCurrentBit() != 0) {
             $data = $this->bitReader($br, $data);

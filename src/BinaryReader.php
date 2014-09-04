@@ -96,6 +96,13 @@ class BinaryReader
         $this->setNextByte(false);
         $this->setCurrentBit(0);
         $this->setPosition(0);
+
+        $this->bitReader = new Bit();
+        $this->stringReader = new String();
+        $this->byteReader = new Byte();
+        $this->int8Reader = new Int8();
+        $this->int16Reader = new Int16();
+        $this->int32Reader = new Int32();
     }
 
     /**
@@ -103,11 +110,15 @@ class BinaryReader
      */
     public function isEof()
     {
-        if ($this->getPosition() >= $this->getEofPosition()) {
-            return true;
-        } else {
-            return false;
-        }
+        return $this->position >= $this->eofPosition;
+    }
+
+    /**
+     * @ return bool
+     */
+    public function canReadBytes($length = 0)
+    {
+        return $this->position + $length <= $this->eofPosition;
     }
 
     /**
@@ -125,7 +136,7 @@ class BinaryReader
      */
     public function readBits($count)
     {
-        return $this->getBitReader()->readSigned($this, $count);
+        return $this->bitReader->readSigned($this, $count);
     }
 
     /**
@@ -134,7 +145,7 @@ class BinaryReader
      */
     public function readUBits($count)
     {
-        return $this->getBitReader()->read($this, $count);
+        return $this->bitReader->read($this, $count);
     }
 
     /**
@@ -143,7 +154,7 @@ class BinaryReader
      */
     public function readBytes($count)
     {
-        return $this->getByteReader()->read($this, $count);
+        return $this->byteReader->read($this, $count);
     }
 
     /**
@@ -151,7 +162,7 @@ class BinaryReader
      */
     public function readInt8()
     {
-        return $this->getInt8Reader()->readSigned($this);
+        return $this->int8Reader->readSigned($this);
     }
 
     /**
@@ -159,7 +170,7 @@ class BinaryReader
      */
     public function readUInt8()
     {
-        return $this->getInt8Reader()->read($this);
+        return $this->int8Reader->read($this);
     }
 
     /**
@@ -167,7 +178,7 @@ class BinaryReader
      */
     public function readInt16()
     {
-        return $this->getInt16Reader()->readSigned($this);
+        return $this->int16Reader->readSigned($this);
     }
 
     /**
@@ -175,7 +186,7 @@ class BinaryReader
      */
     public function readUInt16()
     {
-        return $this->getInt16Reader()->read($this);
+        return $this->int16Reader->read($this);
     }
 
     /**
@@ -183,7 +194,7 @@ class BinaryReader
      */
     public function readInt32()
     {
-        return $this->getInt32Reader()->readSigned($this);
+        return $this->int32Reader->readSigned($this);
     }
 
     /**
@@ -191,7 +202,7 @@ class BinaryReader
      */
     public function readUInt32()
     {
-        return $this->getInt32Reader()->read($this);
+        return $this->int32Reader->read($this);
     }
 
     /**
@@ -200,7 +211,7 @@ class BinaryReader
      */
     public function readString($length)
     {
-        return $this->getStringReader()->read($this, $length);
+        return $this->stringReader->read($this, $length);
     }
 
     /**
@@ -209,7 +220,7 @@ class BinaryReader
      */
     public function readAlignedString($length)
     {
-        return $this->getStringReader()->readAligned($this, $length);
+        return $this->stringReader->readAligned($this, $length);
     }
 
     /**
@@ -373,10 +384,6 @@ class BinaryReader
      */
     public function getBitReader()
     {
-        if (!$this->bitReader instanceof Bit) {
-            $this->bitReader = new Bit();
-        }
-
         return $this->bitReader;
     }
 
@@ -385,10 +392,6 @@ class BinaryReader
      */
     public function getByteReader()
     {
-        if (!$this->byteReader instanceof Byte) {
-            $this->byteReader = new Byte();
-        }
-
         return $this->byteReader;
     }
 
@@ -397,10 +400,6 @@ class BinaryReader
      */
     public function getInt8Reader()
     {
-        if (!$this->int8Reader instanceof Int8) {
-            $this->int8Reader = new Int8();
-        }
-
         return $this->int8Reader;
     }
 
@@ -409,10 +408,6 @@ class BinaryReader
      */
     public function getInt16Reader()
     {
-        if (!$this->int16Reader instanceof Int16) {
-            $this->int16Reader = new Int16();
-        }
-
         return $this->int16Reader;
     }
 
@@ -421,10 +416,6 @@ class BinaryReader
      */
     public function getInt32Reader()
     {
-        if (!$this->int32Reader instanceof Int32) {
-            $this->int32Reader = new Int32();
-        }
-
         return $this->int32Reader;
     }
 
@@ -433,10 +424,18 @@ class BinaryReader
      */
     public function getStringReader()
     {
-        if (!$this->stringReader instanceof String) {
-            $this->stringReader = new String();
-        }
-
         return $this->stringReader;
+    }
+
+    /**
+     * Read a length of characters from the input handle, updating the
+     * internal position marker.
+     *
+     * @return string
+     */
+    public function readFromHandle($length)
+    {
+        $this->position += $length;
+        return fread($this->inputHandle, $length);
     }
 }
