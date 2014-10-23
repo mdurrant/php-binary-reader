@@ -4,7 +4,6 @@ namespace PhpBinaryReader\Type;
 
 use PhpBinaryReader\BinaryReader;
 use PhpBinaryReader\BitMask;
-use PhpBinaryReader\Endian;
 
 class Int8 implements TypeInterface
 {
