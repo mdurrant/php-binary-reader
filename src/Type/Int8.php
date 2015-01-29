@@ -23,7 +23,7 @@ class Int8 implements TypeInterface
     public function read(BinaryReader &$br, $length = null)
     {
         if (!$br->canReadBytes(1)) {
-            throw new \OutOfBoundsException('Cannot read 32-bit int, it exceeds the boundary of the file');
+            throw new \OutOfBoundsException('Cannot read 8-bit int, it exceeds the boundary of the file');
         }
 
         $segment = $br->readFromHandle(1);
