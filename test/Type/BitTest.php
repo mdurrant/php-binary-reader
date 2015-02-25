@@ -35,6 +35,14 @@ class BitTest extends AbstractTestCase
         $this->assertEquals(0, $brLittle->readUBits(4));
         $this->assertEquals(0, $brBig->readUBits(2));
         $this->assertEquals(0, $brLittle->readUBits(2));
+
+        $brBig->readUBits(80);
+        $brLittle->readUBits(80);
+
+        $this->assertEquals(0xF, $brBig->readUBits(4));
+        $this->assertEquals(0xF, $brLittle->readUBits(4));
+        $this->assertEquals(3, $brBig->readUBits(2));
+        $this->assertEquals(3, $brLittle->readUBits(2));
     }
 
     /**
@@ -99,5 +107,31 @@ class BitTest extends AbstractTestCase
     public function testExceptionInvalidBitCountLittleEndian($brBig, $brLittle)
     {
         $brLittle->readBits('foo');
+    }
+
+    /**
+     * @expectedException \OutOfBoundsException
+     * @dataProvider binaryReaders
+     */
+    public function testExceptionBitsOnLastBitsBigEndian($brBig, $brLittle)
+    {
+        $brBig->setPosition(15);
+        $brBig->readBits(4);
+        $brBig->readBits(2);
+        $brBig->readBits(2);
+        $brBig->readBits(1);
+    }
+
+    /**
+     * @expectedException \OutOfBoundsException
+     * @dataProvider binaryReaders
+     */
+    public function testExceptionBitsOnLastBitsLittleEndian($brBig, $brLittle)
+    {
+        $brLittle->setPosition(15);
+        $brLittle->readBits(4);
+        $brLittle->readBits(2);
+        $brLittle->readBits(2);
+        $brLittle->readBits(1);
     }
 }
