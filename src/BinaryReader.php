@@ -114,7 +114,8 @@ class BinaryReader
     }
 
     /**
-     * @ return bool
+     * @param int $length
+     * @return bool
      */
     public function canReadBytes($length = 0)
     {

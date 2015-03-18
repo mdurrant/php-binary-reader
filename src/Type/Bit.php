@@ -28,10 +28,6 @@ class Bit implements TypeInterface
             throw new InvalidDataException('The length parameter must be an integer');
         }
 
-        if (!$br->canReadBytes($length / 8)) {
-            throw new \OutOfBoundsException('Cannot read bits, it exceeds the boundary of the file');
-        }
-
         $bitmask = new BitMask();
         $result = 0;
         $bits = $length;
@@ -52,6 +48,10 @@ class Bit implements TypeInterface
 
                 return $br->getNextByte() >> $shift;
             }
+        }
+
+        if (!$br->canReadBytes($length / 8)) {
+            throw new \OutOfBoundsException('Cannot read bits, it exceeds the boundary of the file');
         }
 
         if ($bits >= 8) {
