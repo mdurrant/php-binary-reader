@@ -304,6 +304,6 @@ class BinaryReaderTest extends AbstractTestCase
         $this->assertInstanceOf('\PhpBinaryReader\Type\Int16', $brBig->getInt16Reader());
         $this->assertInstanceOf('\PhpBinaryReader\Type\Int32', $brBig->getInt32Reader());
         $this->assertInstanceOf('\PhpBinaryReader\Type\Int8', $brBig->getInt8Reader());
-        $this->assertInstanceOf('\PhpBinaryReader\Type\String', $brBig->getStringReader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Str', $brBig->getStringReader());
     }
 }

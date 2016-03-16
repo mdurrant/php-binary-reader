@@ -5,7 +5,7 @@ namespace PhpBinaryReader\Type;
 use PhpBinaryReader\BinaryReader;
 use PhpBinaryReader\Exception\InvalidDataException;
 
-class String implements TypeInterface
+class Str implements TypeInterface
 {
     /**
      * @param  \PhpBinaryReader\BinaryReader $br

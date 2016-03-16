@@ -7,18 +7,18 @@ use PhpBinaryReader\BinaryReader;
 use PhpBinaryReader\Endian;
 
 /**
- * @coversDefaultClass \PhpBinaryReader\Type\String
+ * @coversDefaultClass \PhpBinaryReader\Type\Str
  */
-class StringTest extends AbstractTestCase
+class StrTest extends AbstractTestCase
 {
     /**
-     * @var String
+     * @var Str
      */
     public $string;
 
     public function setUp()
     {
-        $this->string = new String();
+        $this->string = new Str();
     }
 
     /**

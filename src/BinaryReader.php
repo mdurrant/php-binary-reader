@@ -8,7 +8,7 @@ use PhpBinaryReader\Type\Byte;
 use PhpBinaryReader\Type\Int8;
 use PhpBinaryReader\Type\Int16;
 use PhpBinaryReader\Type\Int32;
-use PhpBinaryReader\Type\String;
+use PhpBinaryReader\Type\Str;
 
 class BinaryReader
 {
@@ -58,7 +58,7 @@ class BinaryReader
     private $bitReader;
 
     /**
-     * @var \PhpBinaryReader\Type\String
+     * @var \PhpBinaryReader\Type\Str
      */
     private $stringReader;
 
@@ -98,7 +98,7 @@ class BinaryReader
         $this->setPosition(0);
 
         $this->bitReader = new Bit();
-        $this->stringReader = new String();
+        $this->stringReader = new Str();
         $this->byteReader = new Byte();
         $this->int8Reader = new Int8();
         $this->int16Reader = new Int16();
@@ -421,7 +421,7 @@ class BinaryReader
     }
 
     /**
-     * @return \PhpBinaryReader\Type\String
+     * @return \PhpBinaryReader\Type\Str
      */
     public function getStringReader()
     {
