@@ -291,7 +291,7 @@ class BinaryReaderTest extends AbstractTestCase
         $this->assertEquals('03000000', bin2hex($brLittle->readFromHandle(4)));
         $this->assertEquals(4, $brLittle->getPosition());
 
-        $this->assertEquals("0x03", bin2hex($brBig->readFromHandle(4)));
+        $this->assertEquals('00000003', bin2hex($brBig->readFromHandle(4)));
         $this->assertEquals(4, $brBig->getPosition());
     }
 
