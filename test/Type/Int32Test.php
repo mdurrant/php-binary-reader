@@ -87,7 +87,7 @@ class Int32Test extends AbstractTestCase
      */
     public function testOutOfBoundsExceptionIsThrownWithBigEndian($brBig, $brLittle)
     {
-        $brBig->readBits(128);
+        $brBig->readBits(360);
         $this->int32->read($brBig);
     }
 
@@ -97,7 +97,7 @@ class Int32Test extends AbstractTestCase
      */
     public function testOutOfBoundsExceptionIsThrownWithLittleEndian($brBig, $brLittle)
     {
-        $brLittle->readBits(128);
+        $brLittle->readBits(360);
         $this->int32->read($brLittle);
     }
 

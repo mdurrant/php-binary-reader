@@ -53,7 +53,7 @@ class StrTest extends AbstractTestCase
      */
     public function testExceptionIsThrownIfOutOfBoundsBigEndian($brBig, $brLittle)
     {
-        $brBig->readBits(128);
+        $brBig->readBits(360);
         $this->string->read($brBig, 1);
     }
 
@@ -63,7 +63,7 @@ class StrTest extends AbstractTestCase
      */
     public function testExceptionIsThrownIfOutOfBoundsLittleEndian($brBig, $brLittle)
     {
-        $brLittle->readBits(128);
+        $brLittle->readBits(360);
         $this->string->read($brLittle, 1);
     }
 
