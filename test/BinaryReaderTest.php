@@ -21,14 +21,14 @@ class BinaryReaderTest extends AbstractTestCase
      */
     public function testEof($brBig, $brLittle)
     {
-        $brBig->setPosition(15);
+        $brBig->setPosition(44);
         $this->assertFalse($brBig->isEof());
-        $brBig->setPosition(16);
+        $brBig->setPosition(45);
         $this->assertTrue($brBig->isEof());
 
-        $brLittle->setPosition(15);
+        $brLittle->setPosition(44);
         $this->assertFalse($brLittle->isEof());
-        $brLittle->setPosition(16);
+        $brLittle->setPosition(45);
         $this->assertTrue($brLittle->isEof());
     }
 
@@ -37,12 +37,12 @@ class BinaryReaderTest extends AbstractTestCase
      */
     public function testCanReadBytes($brBig, $brLittle)
     {
-        $brBig->setPosition(15);
+        $brBig->setPosition(44);
         $this->assertTrue($brBig->canReadBytes());
         $this->assertTrue($brBig->canReadBytes(1));
         $this->assertFalse($brBig->canReadBytes(2));
 
-        $brLittle->setPosition(15);
+        $brLittle->setPosition(44);
         $this->assertTrue($brLittle->canReadBytes());
         $this->assertTrue($brLittle->canReadBytes(1));
         $this->assertFalse($brLittle->canReadBytes(2));
@@ -112,6 +112,24 @@ class BinaryReaderTest extends AbstractTestCase
 
         $this->assertEquals(3, $brBig->readUInt32());
         $this->assertEquals(3, $brLittle->readUInt32());
+    }
+
+    /**
+     * @param \PhpBinaryReader\BinaryReader $brBig
+     * @param \PhpBinaryReader\BinaryReader $brLittle
+     *
+     * @dataProvider binaryReaders
+     */
+    public function testSingle(BinaryReader $brBig, BinaryReader $brLittle)
+    {
+        $brBig->setPosition(16);
+        $brLittle->setPosition(16);
+
+        $this->assertEquals(1.0, $brBig->readSingle());
+        $this->assertEquals(1.0, $brLittle->readSingle());
+
+        $this->assertEquals(-1.0, $brBig->readSingle());
+        $this->assertEquals(-1.0, $brLittle->readSingle());
     }
 
     /**
@@ -207,8 +225,8 @@ class BinaryReaderTest extends AbstractTestCase
      */
     public function testEofPosition($brBig, $brLittle)
     {
-        $this->assertEquals(16, $brBig->getEofPosition());
-        $this->assertEquals(16, $brLittle->getEofPosition());
+        $this->assertEquals(45, $brBig->getEofPosition());
+        $this->assertEquals(45, $brLittle->getEofPosition());
     }
 
     /**
@@ -305,5 +323,6 @@ class BinaryReaderTest extends AbstractTestCase
         $this->assertInstanceOf('\PhpBinaryReader\Type\Int32', $brBig->getInt32Reader());
         $this->assertInstanceOf('\PhpBinaryReader\Type\Int8', $brBig->getInt8Reader());
         $this->assertInstanceOf('\PhpBinaryReader\Type\Str', $brBig->getStringReader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Single', $brBig->getSingleReader());
     }
 }

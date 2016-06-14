@@ -39,7 +39,7 @@ class ByteTest extends AbstractTestCase
      */
     public function testExceptionIsThrownIfOutOfBoundsBigEndian($brBig, $brLittle)
     {
-        $brBig->readBits(128);
+        $brBig->readBits(360);
         $this->byte->read($brBig, 1);
     }
 
@@ -49,7 +49,7 @@ class ByteTest extends AbstractTestCase
      */
     public function testExceptionIsThrownIfOutOfBoundsLittleEndian($brBig, $brLittle)
     {
-        $brLittle->readBits(128);
+        $brLittle->readBits(360);
         $this->byte->read($brLittle, 1);
     }
 

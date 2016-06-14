@@ -8,6 +8,7 @@ use PhpBinaryReader\Type\Byte;
 use PhpBinaryReader\Type\Int8;
 use PhpBinaryReader\Type\Int16;
 use PhpBinaryReader\Type\Int32;
+use PhpBinaryReader\Type\Single;
 use PhpBinaryReader\Type\Str;
 
 class BinaryReader
@@ -78,6 +79,11 @@ class BinaryReader
     private $int32Reader;
 
     /**
+     * @var \PhpBinaryReader\Type\Single
+     */
+    private $singleReader;
+
+    /**
      * @param  string|resource           $input
      * @param  int|string                $endian
      * @throws \InvalidArgumentException
@@ -89,7 +95,7 @@ class BinaryReader
         } else {
             $this->setInputHandle($input);
         }
-        
+
         $this->eofPosition = fstat($this->getInputHandle())['size'];
 
         $this->setEndian($endian);
@@ -103,6 +109,7 @@ class BinaryReader
         $this->int8Reader = new Int8();
         $this->int16Reader = new Int16();
         $this->int32Reader = new Int32();
+        $this->singleReader = new Single();
     }
 
     /**
@@ -204,6 +211,14 @@ class BinaryReader
     public function readUInt32()
     {
         return $this->int32Reader->read($this);
+    }
+
+    /**
+     * @return float
+     */
+    public function readSingle()
+    {
+        return $this->singleReader->read($this);
     }
 
     /**
@@ -418,6 +433,14 @@ class BinaryReader
     public function getInt32Reader()
     {
         return $this->int32Reader;
+    }
+
+    /**
+     * @return \PhpBinaryReader\Type\Single
+     */
+    public function getSingleReader()
+    {
+        return $this->singleReader;
     }
 
     /**

@@ -102,7 +102,7 @@ class Int16Test extends AbstractTestCase
      */
     public function testOutOfBoundsExceptionIsThrownWithBigEndian($brBig, $brLittle)
     {
-        $brBig->readBits(128);
+        $brBig->readBits(360);
         $this->int16->read($brBig);
     }
 
@@ -112,7 +112,7 @@ class Int16Test extends AbstractTestCase
      */
     public function testOutOfBoundsExceptionIsThrownWithLittleEndian($brBig, $brLittle)
     {
-        $brLittle->readBits(128);
+        $brLittle->readBits(360);
         $this->int16->read($brLittle);
     }
 

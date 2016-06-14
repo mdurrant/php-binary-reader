@@ -77,7 +77,7 @@ class BitTest extends AbstractTestCase
      */
     public function testExceptionBitsBigEndian($brBig, $brLittle)
     {
-        $brBig->setPosition(16);
+        $brBig->setPosition(45);
         $brBig->readBits(16);
     }
 
@@ -87,7 +87,7 @@ class BitTest extends AbstractTestCase
      */
     public function testExceptionBitsLittleEndian($brBig, $brLittle)
     {
-        $brLittle->setPosition(16);
+        $brLittle->setPosition(45);
         $brLittle->readBits(16);
     }
 
@@ -115,7 +115,7 @@ class BitTest extends AbstractTestCase
      */
     public function testExceptionBitsOnLastBitsBigEndian($brBig, $brLittle)
     {
-        $brBig->setPosition(15);
+        $brBig->setPosition(44);
         $brBig->readBits(4);
         $brBig->readBits(2);
         $brBig->readBits(2);
@@ -128,7 +128,7 @@ class BitTest extends AbstractTestCase
      */
     public function testExceptionBitsOnLastBitsLittleEndian($brBig, $brLittle)
     {
-        $brLittle->setPosition(15);
+        $brLittle->setPosition(44);
         $brLittle->readBits(4);
         $brLittle->readBits(2);
         $brLittle->readBits(2);
