@@ -57,6 +57,10 @@ Methods
 
 **readInt32()** returns a 32-bit signed integer
 
+**readUInt64()** returns a 64-bit unsigned integer
+
+**readInt64()** returns a 64-bit signed integer
+
 **readSingle()** returns a 4-bytes floating-point
 
 **readUBits($length)** returns a variable length of bits (unsigned)
