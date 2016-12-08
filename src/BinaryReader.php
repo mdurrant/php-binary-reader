@@ -8,6 +8,7 @@ use PhpBinaryReader\Type\Byte;
 use PhpBinaryReader\Type\Int8;
 use PhpBinaryReader\Type\Int16;
 use PhpBinaryReader\Type\Int32;
+use PhpBinaryReader\Type\Int64;
 use PhpBinaryReader\Type\Single;
 use PhpBinaryReader\Type\Str;
 
@@ -79,6 +80,11 @@ class BinaryReader
     private $int32Reader;
 
     /**
+     * @var \PhpBinaryReader\Type\Int64
+     */
+    private $int64Reader;
+
+    /**
      * @var \PhpBinaryReader\Type\Single
      */
     private $singleReader;
@@ -109,6 +115,7 @@ class BinaryReader
         $this->int8Reader = new Int8();
         $this->int16Reader = new Int16();
         $this->int32Reader = new Int32();
+        $this->int64Reader = new Int64();
         $this->singleReader = new Single();
     }
 
@@ -211,6 +218,22 @@ class BinaryReader
     public function readUInt32()
     {
         return $this->int32Reader->read($this);
+    }
+
+    /**
+     * @return int
+     */
+    public function readInt64()
+    {
+        return $this->int64Reader->readSigned($this);
+    }
+
+    /**
+     * @return int
+     */
+    public function readUInt64()
+    {
+        return $this->int64Reader->read($this);
     }
 
     /**
@@ -433,6 +456,14 @@ class BinaryReader
     public function getInt32Reader()
     {
         return $this->int32Reader;
+    }
+
+    /**
+     * @return \PhpBinaryReader\Type\Int64
+     */
+    public function getInt64Reader()
+    {
+        return $this->int64Reader;
     }
 
     /**

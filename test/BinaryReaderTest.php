@@ -114,6 +114,21 @@ class BinaryReaderTest extends AbstractTestCase
         $this->assertEquals(3, $brLittle->readUInt32());
     }
 
+        /**
+     * @dataProvider binaryReaders
+     */
+    public function testInt64($brBig, $brLittle)
+    {
+        $this->assertEquals(12885059444, $brBig->readInt64());
+        $this->assertEquals(8387672839590772739, $brLittle->readInt64());
+
+        $brLittle->setPosition(0);
+        $brBig->setPosition(0);
+
+        $this->assertEquals(12885059444, $brBig->readUInt64());
+        $this->assertEquals(8387672839590772739, $brLittle->readUInt64());
+    }
+
     /**
      * @param \PhpBinaryReader\BinaryReader $brBig
      * @param \PhpBinaryReader\BinaryReader $brLittle
@@ -321,6 +336,7 @@ class BinaryReaderTest extends AbstractTestCase
         $this->assertInstanceOf('\PhpBinaryReader\Type\Byte', $brBig->getByteReader());
         $this->assertInstanceOf('\PhpBinaryReader\Type\Int16', $brBig->getInt16Reader());
         $this->assertInstanceOf('\PhpBinaryReader\Type\Int32', $brBig->getInt32Reader());
+        $this->assertInstanceOf('\PhpBinaryReader\Type\Int64', $brBig->getInt64Reader());
         $this->assertInstanceOf('\PhpBinaryReader\Type\Int8', $brBig->getInt8Reader());
         $this->assertInstanceOf('\PhpBinaryReader\Type\Str', $brBig->getStringReader());
         $this->assertInstanceOf('\PhpBinaryReader\Type\Single', $brBig->getSingleReader());
