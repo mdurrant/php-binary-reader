@@ -47,11 +47,11 @@ Methods
 
 **readUInt8()** returns a single 8 bit byte as an unsigned integer
 
-**readInt8()** returns a single 8 bit byte as a nsigned integer
+**readInt8()** returns a single 8 bit byte as a signed integer
 
 **readUInt16()** returns a 16-bit short as an unsigned integer
 
-**readInt16()** returns a 16-bit short as signed integer
+**readInt16()** returns a 16-bit short as a signed integer
 
 **readUInt32()** returns a 32-bit unsigned integer
 
